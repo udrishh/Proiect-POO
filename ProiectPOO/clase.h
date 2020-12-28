@@ -74,7 +74,47 @@ public:
 		return *this;
 	}
 	//friend class Atribut;
+	
+	friend ostream& operator<<(ostream&, Inregistrare);
+	friend istream& operator>>(istream&, Inregistrare&);
+	//friend ofstream& operator<<(ofstream&, Inregistrare);
+	friend ifstream& operator>>(ifstream&, Inregistrare&);
+	
 };
+ostream& operator<<(ostream& out, Inregistrare i)
+{
+	out << i.continutInteger<<" "<<i.continutFloat<<" "<<" "<<i.continutText;
+	return out;
+}
+istream& operator>>(istream& in, Inregistrare& i)
+{
+	in >> i.continutInteger;
+	in >> i.continutFloat;
+	char buffer[100];
+	in >> buffer;
+	i.continutText = new char[strlen(buffer) + 1];
+	strcpy_s(i.continutText, strlen(buffer) + 1, buffer);
+
+	return in;
+}
+/*ofstream& operator<<(ofstream& out, Inregistrare i)
+{
+	out << i.continutInteger << " " << i.continutFloat << " " << " " << i.continutText;
+	return out;
+}*/
+ifstream& operator>>(ifstream& in, Inregistrare& i)
+{
+	in >> i.continutInteger;
+	in >> i.continutFloat;
+	char buffer[100];
+	in >> buffer;
+	i.continutText = new char[strlen(buffer) + 1];
+	strcpy_s(i.continutText, strlen(buffer) + 1, buffer);
+
+	return in;
+}
+
+
 
 class Atribut
 {
