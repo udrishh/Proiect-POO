@@ -77,7 +77,7 @@ public:
 	
 	friend ostream& operator<<(ostream&, Inregistrare);
 	friend istream& operator>>(istream&, Inregistrare&);
-	//friend ofstream& operator<<(ofstream&, Inregistrare);
+	friend stringstream& operator<<(stringstream&, Inregistrare);
 	friend ifstream& operator>>(ifstream&, Inregistrare&);
 	
 };
@@ -97,11 +97,11 @@ istream& operator>>(istream& in, Inregistrare& i)
 
 	return in;
 }
-/*ofstream& operator<<(ofstream& out, Inregistrare i)
+stringstream& operator<<(stringstream& out, Inregistrare i)
 {
 	out << i.continutInteger << " " << i.continutFloat << " " << " " << i.continutText;
 	return out;
-}*/
+}
 ifstream& operator>>(ifstream& in, Inregistrare& i)
 {
 	in >> i.continutInteger;
