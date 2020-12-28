@@ -1,7 +1,4 @@
 # Proiect-POO
-Proiect POO - Vulturii Programatori, gr. 1055
+<b> Vulturii Programatori, gr. 1055<b>
 
-Udris Bogdan
-Terbea Ovidiu
-Tudor Delia
-Tone Iulia
+Udris Bogdan, Terbea Ovidiu, Tudor Delia, Tone Iulia
