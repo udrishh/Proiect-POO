@@ -73,11 +73,13 @@ public:
 		}
 		return *this;
 	}
-	//friend class Atribut;
+
+	
+	friend class Atribut;
 	
 	friend ostream& operator<<(ostream&, Inregistrare);
 	friend istream& operator>>(istream&, Inregistrare&);
-	//friend ofstream& operator<<(ofstream&, Inregistrare);
+	friend stringstream& operator<<(stringstream&, Inregistrare);
 	friend ifstream& operator>>(ifstream&, Inregistrare&);
 	
 };
@@ -97,11 +99,11 @@ istream& operator>>(istream& in, Inregistrare& i)
 
 	return in;
 }
-/*ofstream& operator<<(ofstream& out, Inregistrare i)
+stringstream& operator<<(stringstream& out, Inregistrare i)
 {
 	out << i.continutInteger << " " << i.continutFloat << " " << " " << i.continutText;
 	return out;
-}*/
+}
 ifstream& operator>>(ifstream& in, Inregistrare& i)
 {
 	in >> i.continutInteger;
@@ -126,6 +128,8 @@ private:
 	char* valoareImplicitaText;
 	int nrInregistrari;
 	Inregistrare* inregistrari;
+	//vector<Inregistrare> inregistrari;
+
 
 public:
 	Atribut()
@@ -385,6 +389,72 @@ public:
 		}
 	}
 
+	Inregistrare* getInregistrari()
+	{
+		return inregistrari;
+	}
+
+	int getNrInregistrari()
+	{
+		return nrInregistrari;
+	}
+
+	void adaugaInregistrare(const char* cuvant)
+	{
+		if (strcmp(cuvant, "NULL") == 0)
+		{
+			if (strcmp(tipAtribut,"TEXT")==0)
+			{
+				Inregistrare* copie = new Inregistrare[nrInregistrari + 1];
+				for (int i = 0; i < nrInregistrari; i++)
+				{
+					copie[i] = inregistrari[i];
+				}
+				copie[nrInregistrari + 1].continutText = valoareImplicitaText;
+				nrInregistrari++;
+				for (int i = 0; i < nrInregistrari; i++)
+				{
+					inregistrari[i]=copie[i];
+				}
+				delete[] copie;
+			}
+			else if (strcmp(tipAtribut, "INTEGER") == 0)
+			{
+				Inregistrare* copie = new Inregistrare[nrInregistrari + 1];
+				for (int i = 0; i < nrInregistrari; i++)
+				{
+					copie[i] = inregistrari[i];
+				}
+				copie[nrInregistrari + 1].continutInteger = valoareImplicitaNumeric;
+				nrInregistrari++;
+				for (int i = 0; i < nrInregistrari; i++)
+				{
+					inregistrari[i] = copie[i];
+				}
+				delete[] copie;
+			}
+			else if(strcmp(tipAtribut, "FLOAT") == 0)
+			{
+				Inregistrare* copie = new Inregistrare[nrInregistrari + 1];
+				for (int i = 0; i < nrInregistrari; i++)
+				{
+					copie[i] = inregistrari[i];
+				}
+				copie[nrInregistrari + 1].continutFloat = valoareImplicitaNumeric;
+				nrInregistrari++;
+				for (int i = 0; i < nrInregistrari; i++)
+				{
+					inregistrari[i] = copie[i];
+				}
+				delete[] copie;
+			}
+		}
+		else
+		{
+
+		}
+	}
+
 	//friend class Tabela;
 	friend ofstream& operator<<(ofstream&, Atribut);
 	friend ostream& operator<<(ostream&, Atribut);
@@ -415,6 +485,11 @@ ostream& operator<<(ostream& out, Atribut a)
 	else
 	{
 		out << a.valoareImplicitaNumeric;
+	}
+	out << endl;
+	for (int i = 0; i < a.nrInregistrari; i++)
+	{
+		out << " " << a.inregistrari[i];
 	}
 	return out;
 }
@@ -902,6 +977,104 @@ public:
 			throw exception("Tabela nu exista!");
 		}
 	}
+	//insert into studenti values
+
+	//INSERT INTO studenti VALUES (Bogdan, 20, 6), (Ovidiu, 21, 7.5) 
+	void insertInto(string comanda, Tabela& t)
+	{
+		int contorCuvinte;
+		int parantezaDreapta = 0;
+		int parantezaStanga = 0;
+		char* cuvant;
+		char* copie;
+		string aux;
+		copie = new char[comanda.length() + 1];
+		strcpy(copie, comanda.c_str());
+		cuvant = strtok(copie, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		if (strcmp(cuvant, "VALUES") != 0)
+		{
+			cout << cuvant;
+			throw exception("Comanda invalidaAAAAA!");
+		}
+		//verificare numar paranteze
+		for (unsigned i = 0; i < strlen(copie); i++)
+			{
+			if (copie[i] == '(')
+			{
+				parantezaStanga++;
+			}
+			if (copie[i] == ')')
+			{
+				parantezaDreapta++;
+			}
+		}
+		if (parantezaDreapta != parantezaStanga)
+		{
+			if (parantezaDreapta > parantezaStanga)
+			{
+				throw exception("Paranteza ) lipsa!");
+			}
+			else
+			{
+				throw exception("Paranteza ( lipsa!");
+			}
+		}
+		//determinare numar de parametrii
+		cuvant = strtok(NULL, ", ");
+		contorCuvinte = 0;
+		while (cuvant)
+		{
+			contorCuvinte++;
+			cuvant = strtok(NULL, ", ");
+		}
+		if (contorCuvinte % t.getNrAtribute() != 0)
+		{
+			throw exception("Numar invalid de parametri!");
+		}
+		if (contorCuvinte == 0)
+		{
+			throw exception("Numar invalid de parametri!");
+		}
+		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
+		tempAtribute = t.getAtribute();
+		delete[] copie;
+		copie = new char[comanda.length() + 1];
+		strcpy(copie, comanda.c_str());
+		cuvant = strtok(copie, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		//Inregistrare tempInregistrari = new inregistrari
+		for (int i = 0; i < contorCuvinte / t.getNrAtribute(); i++)
+		{
+			//inregistrarea i
+			for (int j = 0; j < t.getNrAtribute(); j++)
+			{
+				//atribut j
+				cuvant = strtok(NULL, ", ");
+				//scoatem paranteza ( sau ) daca este cazul
+				if (cuvant[0] == '(')
+				{
+					memmove(cuvant, cuvant + 1, strlen(cuvant + 1) + 1);
+				}
+				else if (cuvant[strlen(cuvant)] == ')')
+				{
+					char auxiliar[255] = "";
+					for (unsigned i = 0; i < strlen(cuvant) - 1; i++)
+					{
+						auxiliar[i] = cuvant[i];
+					}
+					strcpy_s(cuvant, strlen(auxiliar) + 1, auxiliar);
+				}
+				//verificam daca e null
+				
+				tempAtribute[j].adaugaInregistrare(cuvant);//val implicita
+			}
+		}
+	}
 };
 
 class Input
@@ -984,7 +1157,53 @@ public:
 				throw exception("Cuvant cheie incorect!");
 			}
 		}
+		//INSERT INTO studenti VALUES (Bogdan, 20, 6), (Ovidiu, 21, 7.5) 
 		//COMANDA NECUNOSCUTA
+		else if (strcmp(cuvant, "INSERT") == 0)
+		{
+			cuvant = strtok(NULL, " ");
+			if (strcmp(cuvant, "INTO") == 0)
+			{
+				cuvant = strtok(NULL, " ");
+				//cuvant=numeTabela
+				//verificam daca exista tabela
+				bool gasit = 0;
+				int j;
+				for (int i = 0; i < nrTabele && gasit==0; i++)
+				{
+					if (strcmp(cuvant, tabele[i].getNumeTabela()) == 0)
+					{
+						gasit = 1;
+						j = i;
+					}
+				}
+				if (gasit)
+				{
+						
+					Tabela t=tabele[j];
+					Comanda iI;
+					iI.insertInto(comanda, t);
+					cout << t;
+					/*Atribut* at = new Atribut[t.getNrAtribute()];
+					Inregistrare in[3][2];*/
+					/*for (int i = 0; i < t.getNrAtribute(); i++)
+					{
+						for (int j = 0; j < 2; j++)
+						{
+							
+						}
+					}*/
+				}
+				else
+				{
+					throw exception("Tabea nu exista!");
+				}
+			}
+			else
+			{
+				throw exception("Cuvant cheie incorect!");
+			}
+		}
 		else
 		{
 			throw exception("Comanda necunoscuta!");
