@@ -74,9 +74,22 @@ public:
 		return *this;
 	}
 
+	int getContinutInteger()
+	{
+		return continutInteger;
+	}
+
+	float getContinutFloat()
+	{
+		return continutFloat;
+	}
+
+	char* getContinutText()
+	{
+		return continutText;
+	}
 	
 	friend class Atribut;
-	
 	friend ostream& operator<<(ostream&, Inregistrare);
 	friend istream& operator>>(istream&, Inregistrare&);
 	friend stringstream& operator<<(stringstream&, Inregistrare);
@@ -85,7 +98,8 @@ public:
 };
 ostream& operator<<(ostream& out, Inregistrare i)
 {
-	out << i.continutInteger<<" "<<i.continutFloat<<" "<<" "<<i.continutText;
+	
+	out <<"Inregistrari: "<< i.continutInteger<<" "<<i.continutFloat<<" "<<" "<<i.continutText;
 	return out;
 }
 istream& operator>>(istream& in, Inregistrare& i)
@@ -439,6 +453,7 @@ public:
 				inr.continutText = new char[strlen(cuvant) + 1];
 				strcpy_s(inr.continutText, strlen(cuvant) + 1, cuvant);
 				inregistrari.push_back(inr.continutText);
+				nrInregistrari++;
 				//for (int i = 0; i < nrInregistrari; i++)
 				//{
 				//	copie[i] = inregistrari[i];
@@ -464,7 +479,7 @@ public:
 				}
 				inr.continutInteger = integer;
 				inregistrari.push_back(inr.continutInteger);
-				
+				nrInregistrari++;
 				/*Inregistrare* copie = new Inregistrare[nrInregistrari + 1];
 				for (int i = 0; i < nrInregistrari; i++)
 				{
@@ -487,6 +502,7 @@ public:
 			}
 			else if (strcmp(tipAtribut, "FLOAT") == 0)
 			{
+				cout << "**" << cuvant << "**";
 				Inregistrare inr;
 				float valFloat = 0;
 				float zecimale = 1;
@@ -503,8 +519,9 @@ public:
 				}
 				valFloat = valFloat / zecimale;
 				inr.continutFloat = valFloat;
+				
 				inregistrari.push_back(inr.continutFloat);
-
+				nrInregistrari++;
 				/*Inregistrare* copie = new Inregistrare[nrInregistrari + 1];
 				for (int i = 0; i < nrInregistrari; i++)
 				{
@@ -536,6 +553,7 @@ public:
 	}
 
 	//friend class Tabela;
+	friend class Inregistrare;
 	friend ofstream& operator<<(ofstream&, Atribut);
 	friend ostream& operator<<(ostream&, Atribut);
 	friend ifstream& operator>>(ifstream&, Atribut&);
@@ -544,7 +562,7 @@ public:
 
 ofstream& operator<<(ofstream& out, Atribut a)
 {
-	out << a.numeAtribut << " " << a.tipAtribut << " " << a.dimensiuneAtribut << " ";
+	out <<"Atibute: "<< a.numeAtribut << " " << a.tipAtribut << " " << a.dimensiuneAtribut << " ";
 	if (strcmp(a.tipAtribut, "TEXT") == 0)
 	{
 		out << a.valoareImplicitaText;
@@ -557,7 +575,7 @@ ofstream& operator<<(ofstream& out, Atribut a)
 }
 ostream& operator<<(ostream& out, Atribut a)
 {
-	out << a.numeAtribut << " " << a.tipAtribut << " " << a.dimensiuneAtribut << " ";
+	out << "Atribute: " << a.numeAtribut << " " << a.tipAtribut << " " << a.dimensiuneAtribut << " ";
 	if (strcmp(a.tipAtribut, "TEXT") == 0)
 	{
 		out << a.valoareImplicitaText;
@@ -569,7 +587,19 @@ ostream& operator<<(ostream& out, Atribut a)
 	out << endl;
 	for (int i = 0; i < a.nrInregistrari; i++)
 	{
-		out << " " << a.inregistrari[i];
+		if (strcmp(a.tipAtribut, "TEXT") == 0)
+		{
+			out << a.inregistrari[i].getContinutText()<<" ";
+		}
+		else if(strcmp(a.tipAtribut, "INTEGER") == 0)
+		{
+			out << a.inregistrari[i].getContinutInteger()<<" ";
+		}
+		else
+		{
+			out << a.inregistrari[i].getContinutFloat()<<" ";
+		}
+
 	}
 	return out;
 }
@@ -776,11 +806,12 @@ ofstream& operator<<(ofstream& out, Tabela t)
 ostream& operator<<(ostream& out, Tabela t)
 {
 	out << t.numeTabela << " " << t.nrAtribute;
+	out << endl;
 	if (t.nrAtribute > 0)
 	{
 		for (int i = 0; i < t.nrAtribute; i++)
 		{
-			out << " " << t.atribute[i];
+			out << t.atribute[i]<<endl;
 		}
 	}
 	return out;
@@ -1002,7 +1033,7 @@ public:
 			//adaugam tabela la vectorul de tabele
 			adaugaTabela(t1);
 			//adaugam tabela in fisier
-			ofstream f("tabele.txt", ios::app);
+			ofstream f("tabele.txt", ios::ate);
 			f << t1 << endl;
 			f.close();
 		}
@@ -1140,14 +1171,15 @@ public:
 				{
 					memmove(cuvant, cuvant + 1, strlen(cuvant + 1) + 1);
 				}
-				else if (cuvant[strlen(cuvant)] == ')')
+				else if (cuvant[strlen(cuvant)-1] == ')')
 				{
-					char auxiliar[255] = "";
+					char auxiliar[255]="";
 					for (unsigned i = 0; i < strlen(cuvant) - 1; i++)
 					{
 						auxiliar[i] = cuvant[i];
 					}
 					strcpy_s(cuvant, strlen(auxiliar) + 1, auxiliar);
+
 				}
 				//verificam daca e null
 				
