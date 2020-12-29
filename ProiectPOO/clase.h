@@ -1327,22 +1327,58 @@ parantezaStanga++;
 				gasit = 1;
 				strcpy_s(tipAtribut, strlen(tempAtribute[i].getTipAtribut()) + 1, tempAtribute[i].getTipAtribut());
 				atributDeCautat = tempAtribute[i];
+				//cout << atributDeCautat<<"*";
 				pozitie = i;
 			}
 		}
 		if (gasit)
 		{
+			//cout << numeAtribut << " ";
 			cuvant = strtok(NULL, " ");
 			if (strcmp(cuvant, "=") != 0)
 			{
 				throw exception("Comanda este invalida !");
 			}
-			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
+			cuvant = strtok(NULL, " ");//valoarea 
+			char numeInregistrare[255] = " ";
+			strcpy_s(numeInregistrare, strlen(cuvant) + 1, cuvant);
 
+			//cout << numeInregistrare;
+			pozitie = 0;
+			vector <Inregistrare> tempI = tempAtribute[pozitie].getInregistrari();
+			for (int i = 0; i < tempAtribute->getNrInregistrari(); i++)
+			{
+				
+				if (strcmp(tempAtribute->getNumeAtribut(), numeAtribut) == 0)
+				{
+					for (int j = 0; j < t.getNrAtribute()-1; j++)
+					{
+						if (strcmp(tempI[j].getContinutText(), numeInregistrare) == 0)
+							for (int k = 0; k < tempAtribute->getNrInregistrari(); k++)
+							{
+								cout << tempI[j] << " ";
+								break;
+							}
+						break;
+					}
+				}
+			}
+
+			/*Inregistrare* tempInr = new Inregistrare[tempAtribute[pozitie].getNrInregistrari()];
+			vector <Inregistrare> tempI = tempAtribute[pozitie].getInregistrari();
+			int pozitie2 = 0;
 			for (int i = 0; i < t.getNrAtribute(); i++)
 			{
-				cout << tempAtribute[i] << " ";
+				if (strcmp(tempI[i].getContinutText(), numeInregistrare) == 0)
+				{
+					pozitie2 = i;
+				}
 			}
+			for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
+			{
+				cout << tempI[pozitie2]<<" ";
+			}*/
+
 			//t.setAtribute(tempAtribute, t.getNrAtribute());
 
 			//O PARTE DIN SELECT
@@ -1352,7 +1388,7 @@ parantezaStanga++;
 				cout << tempAtribute[i] << " ";
 			}*/
 
-			cout << "Inregistrarea a fost stearsa!" << endl;
+			//cout << "Inregistrarea a fost stearsa!" << endl;
 
 		}
 		else
