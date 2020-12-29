@@ -487,25 +487,6 @@ public:
 				inr.continutInteger = integer;
 				inregistrari.push_back(inr.continutInteger);
 				nrInregistrari++;
-				/*Inregistrare* copie = new Inregistrare[nrInregistrari + 1];
-				for (int i = 0; i < nrInregistrari; i++)
-				{
-					copie[i] = inregistrari[i];
-				}
-
-				int integer = 0;
-				for (unsigned i = 0; i < strlen(cuvant); i++)
-				{
-					integer = integer * 10 + int(cuvant[i]) - 48;
-				}
-
-				copie[nrInregistrari + 1].continutInteger = integer;
-				nrInregistrari++;
-				for (int i = 0; i < nrInregistrari; i++)
-				{
-					inregistrari[i] = copie[i];
-				}
-				delete[] copie;*/
 			}
 			else if (strcmp(tipAtribut, "FLOAT") == 0)
 			{
@@ -1309,18 +1290,83 @@ parantezaStanga++;
 		}
 		else
 		{
-			throw exception("Nume atrubut invalid!");
+			throw exception("Nume atribut invalid!");
 		}
 	}
 
 	//neterminat
-	void selectFrom(string comanda, Tabela& t)
+	void selectAllFrom(string comanda, Tabela& t)
+	{
+		char* cuvant;
+		char* copie;
+		copie = new char[comanda.length() + 1];
+		strcpy(copie, comanda.c_str());
+		cuvant = strtok(copie, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		if (strcmp(cuvant, "WHERE") != 0)
+		{
+			throw exception("Comanda este invalida !");
+		}
+		cuvant = strtok(NULL, " "); //nume atribut de cautat
+		//verificam daca numele de atribut este valid
+		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
+		tempAtribute = t.getAtribute();
+		bool gasit = 0;
+		char numeAtribut[255] = "";
+		char tipAtribut[255] = "";
+		Atribut atributDeCautat;
+		int pozitie = 0;
+		strcpy_s(numeAtribut, strlen(cuvant) + 1, cuvant);
+		for (int i = 0; i < t.getNrAtribute() && gasit == 0; i++)
+		{
+			if (strcmp(tempAtribute[i].getNumeAtribut(), numeAtribut) == 0)
+			{
+				gasit = 1;
+				strcpy_s(tipAtribut, strlen(tempAtribute[i].getTipAtribut()) + 1, tempAtribute[i].getTipAtribut());
+				atributDeCautat = tempAtribute[i];
+				pozitie = i;
+			}
+		}
+		if (gasit)
+		{
+			cuvant = strtok(NULL, " ");
+			if (strcmp(cuvant, "=") != 0)
+			{
+				throw exception("Comanda este invalida !");
+			}
+			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
+
+			for (int i = 0; i < t.getNrAtribute(); i++)
+			{
+				cout << tempAtribute[i] << " ";
+			}
+			//t.setAtribute(tempAtribute, t.getNrAtribute());
+
+			//O PARTE DIN SELECT
+
+			/*for (int i = 0; i < t.getNrAtribute(); i++)
+			{
+				cout << tempAtribute[i] << " ";
+			}*/
+
+			cout << "Inregistrarea a fost stearsa!" << endl;
+
+		}
+		else
+		{
+			throw exception("Nume atribut invalid!");
+		}
+	}
+	
+	void selectFromWhat(string comanda, Tabela& t)
 	{
 
 	}
-
 	//neterminat
-	void update(string, Tabela& t)
+	void update(string comanda, Tabela& t)
 	{
 
 	}
@@ -1433,12 +1479,14 @@ public:
 					Comanda iI;
 					iI.insertInto(comanda, t);
 					tabele[j] = t;
-					cout << t;
+					//cout << t;
 					ofstream f("tabele.txt", ios::ate);
 					for (int i = 0; i < nrTabele; i++)
 					{
 						f << tabele[i]<<endl;
 					}
+					cout << endl;
+					cout << "Valorile au fost inserate cu succes !";
 				}
 				else
 				{
@@ -1492,6 +1540,51 @@ public:
 				throw exception("Comanda invalida !");
 
 		}
+		else  if (strcmp(cuvant, "SELECT") == 0)
+		{
+			cuvant = strtok(NULL, " ");
+			if (strcmp(cuvant, "ALL") == 0)
+			{
+				cuvant = strtok(NULL, " ");
+				if (strcmp(cuvant, "FROM") == 0)
+				{
+					cuvant = strtok(NULL, " ");
+					bool gasit = 0;
+					int j;
+					for (int i = 0; i < nrTabele && gasit == 0; i++)
+					{
+						if (strcmp(cuvant, tabele[i].getNumeTabela()) == 0)
+						{
+							gasit = 1;
+							j = i;
+						}
+					}
+					if (gasit)
+					{
+
+						Tabela t = tabele[j];
+						Comanda SF;
+						SF.selectAllFrom(comanda, t);
+						//facem update la tabele
+						tabele[j] = t;
+						//cout << t;
+						/*ofstream f("tabele.txt", ios::ate);
+						for (int i = 0; i < nrTabele; i++)
+						{
+							f << tabele[i] << endl;
+						}*/
+					}
+					else
+					{
+						throw exception("Tabela nu exista!");
+					}
+
+				}
+				else
+					throw exception("Comanda invalida !");
+				}
+			}
+		
 		else
 		{
 			throw exception("Comanda necunoscuta!");
