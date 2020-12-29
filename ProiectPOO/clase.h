@@ -4,8 +4,8 @@
 #include <fstream>
 #include <iomanip>
 #include <vector>
+#include <windows.h>
 using namespace std;
-
 
 class Inregistrare
 {
@@ -73,33 +73,68 @@ public:
 		}
 		return *this;
 	}
-
 	int getContinutInteger()
 	{
 		return continutInteger;
 	}
-
 	float getContinutFloat()
 	{
 		return continutFloat;
 	}
-
 	char* getContinutText()
 	{
 		return continutText;
 	}
-	
+	void setContinutText(const char* continutText)
+	{
+		if (continutText != nullptr)
+		{
+			if (this->continutText != nullptr)
+			{
+				delete[] this->continutText;
+			}
+			this->continutText = new char[strlen(continutText) + 1];
+			strcpy_s(this->continutText, strlen(continutText) + 1, continutText);
+		}
+		else
+		{
+			this->continutText = nullptr;
+		}
+	}
+	void setContinutInteger(int continutInteger)
+	{
+		if (continutInteger > 0)
+		{
+			this->continutInteger = continutInteger;
+		}
+		else
+		{
+			this->continutInteger = 0;
+		}
+	}
+	void setContinutFloat(float continutFloat)
+	{
+		if (continutFloat > 0)
+		{
+			this->continutFloat = continutFloat;
+		}
+		else
+		{
+			this->continutFloat = 0;
+		}
+	}
+
 	friend class Atribut;
 	friend ostream& operator<<(ostream&, Inregistrare);
 	friend istream& operator>>(istream&, Inregistrare&);
-	friend stringstream& operator<<(stringstream&, Inregistrare);
+	//friend stringstream& operator<<(stringstream&, Inregistrare);
 	friend ifstream& operator>>(ifstream&, Inregistrare&);
 	
 };
 ostream& operator<<(ostream& out, Inregistrare i)
 {
 	
-	out <<"Inregistrari: "<< i.continutInteger<<" "<<i.continutFloat<<" "<<" "<<i.continutText;
+	out << i.continutInteger<<" "<<i.continutFloat<<" "<<" "<<i.continutText;
 	return out;
 }
 istream& operator>>(istream& in, Inregistrare& i)
@@ -113,11 +148,11 @@ istream& operator>>(istream& in, Inregistrare& i)
 
 	return in;
 }
-stringstream& operator<<(stringstream& out, Inregistrare i)
+/*stringstream& operator<<(stringstream& out, Inregistrare i)
 {
 	out << i.continutInteger << " " << i.continutFloat << " " << " " << i.continutText;
 	return out;
-}
+}*/
 ifstream& operator>>(ifstream& in, Inregistrare& i)
 {
 	in >> i.continutInteger;
@@ -369,7 +404,7 @@ public:
 	{
 		return valoareImplicitaText;
 	}
-	void setInregistrari(Inregistrare* inregistrari, int nrInregistrari)
+	void setInregistrari(vector<Inregistrare> inregistrari, int nrInregistrari)
 	{
 		if ( nrInregistrari > 0)
 		{
@@ -384,65 +419,51 @@ public:
 			this->inregistrari.empty();
 		}
 	}
-
+	void setNrInregistrari(int nrInregistrari)
+	{
+		if (nrInregistrari > 0)
+		{
+			this->nrInregistrari = nrInregistrari;
+		}
+		else
+		{
+			this->nrInregistrari = 0;
+		}
+	}
 	vector<Inregistrare> getInregistrari()
 	{
 		return inregistrari;
 	}
-
 	int getNrInregistrari()
 	{
 		return nrInregistrari;
 	}
-
 	void adaugaInregistrare(const char* cuvant)
 	{
 		if (strcmp(cuvant, "NULL") == 0)
 		{
-			if (strcmp(tipAtribut,"TEXT")==0)
+			
+			if (strcmp(tipAtribut, "TEXT") == 0)
 			{
-				Inregistrare* copie = new Inregistrare[nrInregistrari + 1];
-				for (int i = 0; i < nrInregistrari; i++)
-				{
-					copie[i] = inregistrari[i];
-				}
-				strcpy_s(copie[nrInregistrari + 1].continutText, strlen(valoareImplicitaText) + 1, valoareImplicitaText);
+				Inregistrare inr;
+				inr.continutText = new char[strlen(valoareImplicitaText) + 1];
+				strcpy_s(inr.continutText, strlen(valoareImplicitaText) + 1, valoareImplicitaText);
+				inregistrari.push_back(inr.continutText);
 				nrInregistrari++;
-				for (int i = 0; i < nrInregistrari; i++)
-				{
-					inregistrari[i]=copie[i];
-				}
-				delete[] copie;
 			}
 			else if (strcmp(tipAtribut, "INTEGER") == 0)
 			{
-				Inregistrare* copie = new Inregistrare[nrInregistrari + 1];
-				for (int i = 0; i < nrInregistrari; i++)
-				{
-					copie[i] = inregistrari[i];
-				}
-				copie[nrInregistrari + 1].continutInteger = valoareImplicitaNumeric;
+				Inregistrare inr;
+				inr.continutInteger = valoareImplicitaNumeric;
+				inregistrari.push_back(inr.continutInteger);
 				nrInregistrari++;
-				for (int i = 0; i < nrInregistrari; i++)
-				{
-					inregistrari[i] = copie[i];
-				}
-				delete[] copie;
 			}
-			else if(strcmp(tipAtribut, "FLOAT") == 0)
+			else if (strcmp(tipAtribut, "FLOAT") == 0)
 			{
-				Inregistrare* copie = new Inregistrare[nrInregistrari + 1];
-				for (int i = 0; i < nrInregistrari; i++)
-				{
-					copie[i] = inregistrari[i];
-				}
-				copie[nrInregistrari + 1].continutFloat = valoareImplicitaNumeric;
+				Inregistrare inr;
+				inr.continutFloat = valoareImplicitaNumeric;
+				inregistrari.push_back(inr.continutFloat);
 				nrInregistrari++;
-				for (int i = 0; i < nrInregistrari; i++)
-				{
-					inregistrari[i] = copie[i];
-				}
-				delete[] copie;
 			}
 		}
 		else
@@ -454,20 +475,6 @@ public:
 				strcpy_s(inr.continutText, strlen(cuvant) + 1, cuvant);
 				inregistrari.push_back(inr.continutText);
 				nrInregistrari++;
-				//for (int i = 0; i < nrInregistrari; i++)
-				//{
-				//	copie[i] = inregistrari[i];
-				//}
-				////copie[nrInregistrari + 1].continutText = valoareImplicitaText;
-				//strcpy_s(copie[nrInregistrari].continutText, strlen(cuvant) + 1, cuvant);
-				//nrInregistrari++;
-				//for (int i = 0; i < nrInregistrari; i++)
-				//{
-				//	inregistrari[i] = copie[i];
-				//}
-				//delete[] copie;
-				
-				
 			}
 			else if (strcmp(tipAtribut, "INTEGER") == 0)
 			{
@@ -502,7 +509,6 @@ public:
 			}
 			else if (strcmp(tipAtribut, "FLOAT") == 0)
 			{
-				cout << "**" << cuvant << "**";
 				Inregistrare inr;
 				float valFloat = 0;
 				float zecimale = 1;
@@ -522,36 +528,68 @@ public:
 				
 				inregistrari.push_back(inr.continutFloat);
 				nrInregistrari++;
-				/*Inregistrare* copie = new Inregistrare[nrInregistrari + 1];
-				for (int i = 0; i < nrInregistrari; i++)
-				{
-					copie[i] = inregistrari[i];
-				}
-				float valFloat = 0;
-				float zecimale = 1;
-				for (unsigned i = 0; i < strlen(cuvant); i++)
-				{
-					if (cuvant[i] != '.')
-					{
-						valFloat = valFloat * 10 + int(cuvant[i]) - 48;
-					}
-					else if (cuvant[i] == '.')
-					{
-						zecimale = zecimale * 10;
-					}
-				}
-				valFloat = valFloat / zecimale;
-				copie[nrInregistrari + 1].continutFloat = valFloat;
-				nrInregistrari++;
-				for (int i = 0; i < nrInregistrari; i++)
-				{
-					inregistrari[i] = copie[i];
-				}
-				delete[] copie;*/
 			}
 		}
 	}
-
+	void stergeInregistrare(const char* cuvant)
+	{
+		if (strcmp(tipAtribut, "TEXT") == 0)
+		{
+			for (int i = 0; i < nrInregistrari; i++)
+			{
+				if (strcmp(inregistrari[i].continutText, cuvant) == 0)
+				{
+					inregistrari.erase(inregistrari.begin() + i);
+					nrInregistrari--;
+				}
+			}
+		}
+		if (strcmp(tipAtribut, "INTEGER") == 0)
+		{
+			Inregistrare inr;
+			int integer = 0;
+			for (unsigned i = 0; i < strlen(cuvant); i++)
+			{
+				integer = integer * 10 + int(cuvant[i]) - 48;
+			}
+			inr.continutInteger = integer;
+			for (int i = 0; i < nrInregistrari; i++)
+			{
+				if (inregistrari[i].continutInteger == inr.continutInteger)
+				{
+					inregistrari.erase(inregistrari.begin() + i);
+					nrInregistrari--;
+				}
+			}
+		}
+		if (strcmp(tipAtribut, "FLOAT") == 0)
+		{
+			Inregistrare inr;
+			float valFloat = 0;
+			float zecimale = 1;
+			for (unsigned i = 0; i < strlen(cuvant); i++)
+			{
+				if (cuvant[i] != '.')
+				{
+					valFloat = valFloat * 10 + int(cuvant[i]) - 48;
+				}
+				else if (cuvant[i] == '.')
+				{
+					zecimale = zecimale * 10;
+				}
+			}
+			valFloat = valFloat / zecimale;
+			inr.continutFloat = valFloat;
+			for (int i = 0; i < nrInregistrari; i++)
+			{
+				if (inregistrari[i].continutFloat == inr.continutFloat)
+				{
+					inregistrari.erase(inregistrari.begin() + i);
+					nrInregistrari--;
+				}
+			}
+		}
+	}
 	//friend class Tabela;
 	friend class Inregistrare;
 	friend ofstream& operator<<(ofstream&, Atribut);
@@ -562,20 +600,7 @@ public:
 
 ofstream& operator<<(ofstream& out, Atribut a)
 {
-	out <<"Atibute: "<< a.numeAtribut << " " << a.tipAtribut << " " << a.dimensiuneAtribut << " ";
-	if (strcmp(a.tipAtribut, "TEXT") == 0)
-	{
-		out << a.valoareImplicitaText;
-	}
-	else
-	{
-		out << a.valoareImplicitaNumeric;
-	}
-	return out;
-}
-ostream& operator<<(ostream& out, Atribut a)
-{
-	out << "Atribute: " << a.numeAtribut << " " << a.tipAtribut << " " << a.dimensiuneAtribut << " ";
+	out << a.numeAtribut << " " << a.tipAtribut << " " << a.dimensiuneAtribut << " ";
 	if (strcmp(a.tipAtribut, "TEXT") == 0)
 	{
 		out << a.valoareImplicitaText;
@@ -585,22 +610,56 @@ ostream& operator<<(ostream& out, Atribut a)
 		out << a.valoareImplicitaNumeric;
 	}
 	out << endl;
+	out << a.nrInregistrari<<" ";
 	for (int i = 0; i < a.nrInregistrari; i++)
 	{
 		if (strcmp(a.tipAtribut, "TEXT") == 0)
 		{
-			out << a.inregistrari[i].getContinutText()<<" ";
+			out << a.inregistrari[i].getContinutText() << " ";
 		}
-		else if(strcmp(a.tipAtribut, "INTEGER") == 0)
+		else if (strcmp(a.tipAtribut, "INTEGER") == 0)
 		{
-			out << a.inregistrari[i].getContinutInteger()<<" ";
+			out << a.inregistrari[i].getContinutInteger() << " ";
 		}
 		else
 		{
-			out << a.inregistrari[i].getContinutFloat()<<" ";
+			out << a.inregistrari[i].getContinutFloat() << " ";
 		}
 
 	}
+	out << endl;
+	return out;
+}
+ostream& operator<<(ostream& out, Atribut a)
+{
+	out << a.numeAtribut << " " << a.tipAtribut << " " << a.dimensiuneAtribut << " ";
+	if (strcmp(a.tipAtribut, "TEXT") == 0)
+	{
+		out << a.valoareImplicitaText;
+	}
+	else
+	{
+		out << a.valoareImplicitaNumeric;
+	}
+	out << endl;
+	out << a.nrInregistrari<<" ";
+	for (int i = 0; i < a.nrInregistrari; i++)
+	{
+		if (strcmp(a.tipAtribut, "TEXT") == 0)
+		{
+			out << a.inregistrari[i].getContinutText() << " ";
+		}
+		else if (strcmp(a.tipAtribut, "INTEGER") == 0)
+		{
+			out << a.inregistrari[i].getContinutInteger() << " ";
+		}
+		else
+		{
+			out << a.inregistrari[i].getContinutFloat() << " ";
+		}
+
+	}
+	out << endl;
 	return out;
 }
 ifstream& operator>>(ifstream& in, Atribut& a)
@@ -793,25 +852,24 @@ public:
 
 ofstream& operator<<(ofstream& out, Tabela t)
 {
-	out << t.numeTabela << " " << t.nrAtribute;
+	out << t.numeTabela << " " << t.nrAtribute<<endl;
 	if (t.nrAtribute > 0)
 	{
 		for (int i = 0; i < t.nrAtribute; i++)
 		{
-			out << " " << t.atribute[i];
+			out << t.atribute[i];
 		}
 	}
 	return out;
 }
 ostream& operator<<(ostream& out, Tabela t)
 {
-	out << t.numeTabela << " " << t.nrAtribute;
-	out << endl;
+	out << t.numeTabela << " " << t.nrAtribute << endl;
 	if (t.nrAtribute > 0)
 	{
 		for (int i = 0; i < t.nrAtribute; i++)
 		{
-			out << t.atribute[i]<<endl;
+			out << t.atribute[i];
 		}
 	}
 	return out;
@@ -1115,7 +1173,7 @@ public:
 			{
 			if (copie[i] == '(')
 			{
-				parantezaStanga++;
+parantezaStanga++;
 			}
 			if (copie[i] == ')')
 			{
@@ -1171,9 +1229,9 @@ public:
 				{
 					memmove(cuvant, cuvant + 1, strlen(cuvant + 1) + 1);
 				}
-				else if (cuvant[strlen(cuvant)-1] == ')')
+				else if (cuvant[strlen(cuvant) - 1] == ')')
 				{
-					char auxiliar[255]="";
+					char auxiliar[255] = "";
 					for (unsigned i = 0; i < strlen(cuvant) - 1; i++)
 					{
 						auxiliar[i] = cuvant[i];
@@ -1182,15 +1240,18 @@ public:
 
 				}
 				//verificam daca e null
-				
+
 				tempAtribute[j].adaugaInregistrare(cuvant);//val implicita
 			}
 		}
 	}
 
+	//neterminat
+	//DELETE FROM STUDENTI WHERE NUME = BOGDAN
+	//DELETE FROM STUDENTI WHERE MEDIA = 4
 	void deleteFrom(string comanda, Tabela& t)
 	{
-		
+
 		char* cuvant;
 		char* copie;
 		copie = new char[comanda.length() + 1];
@@ -1203,13 +1264,67 @@ public:
 		{
 			throw exception("Comanda este invalida !");
 		}
-		strtok(NULL, " ");
-		for (int i = 0; i < t.getNrAtribute(); i++)
+		cuvant = strtok(NULL, " "); //nume atribut de cautat
+		//verificam daca numele de atribut este valid
+		
+		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
+		tempAtribute = t.getAtribute();
+		bool gasit = 0;
+		char numeAtribut[255] = "";
+		char tipAtribut[255] = "";
+		Atribut atributDeCautat;
+		int pozitie=0;
+		strcpy_s(numeAtribut, strlen(cuvant) + 1, cuvant);
+		for (int i = 0; i < t.getNrAtribute() && gasit==0; i++)
 		{
+			if (strcmp(tempAtribute[i].getNumeAtribut(), numeAtribut) == 0)
+			{
+				gasit = 1;
+				strcpy_s(tipAtribut, strlen(tempAtribute[i].getTipAtribut()) + 1, tempAtribute[i].getTipAtribut());
+				atributDeCautat = tempAtribute[i];
+				pozitie = i;
+			}
+		}
+		if (gasit)
+		{
+			cuvant = strtok(NULL, " ");
+			if (strcmp(cuvant, "=") != 0)
+			{
+				throw exception("Comanda este invalida !");
+			}
+			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
+			
+			tempAtribute[pozitie].stergeInregistrare(cuvant);
+			//t.setAtribute(tempAtribute, t.getNrAtribute());
+
+			//O PARTE DIN SELECT
+
+			/*for (int i = 0; i < t.getNrAtribute(); i++)
+			{
+				cout << tempAtribute[i] << " ";
+			}*/
+
+			cout <<"Inregistrarea a fost stearsa!"<< endl;
 			
 		}
+		else
+		{
+			throw exception("Nume atrubut invalid!");
+		}
+	}
+
+	//neterminat
+	void selectFrom(string comanda, Tabela& t)
+	{
 
 	}
+
+	//neterminat
+	void update(string, Tabela& t)
+	{
+
+	}
+
 };
 
 class Input
@@ -1293,7 +1408,6 @@ public:
 			}
 		}
 		//INSERT INTO studenti VALUES (Bogdan, 20, 6), (Ovidiu, 21, 7.5) 
-		//COMANDA NECUNOSCUTA
 		else if (strcmp(cuvant, "INSERT") == 0)
 		{
 			cuvant = strtok(NULL, " ");
@@ -1318,17 +1432,13 @@ public:
 					Tabela t=tabele[j];
 					Comanda iI;
 					iI.insertInto(comanda, t);
+					tabele[j] = t;
 					cout << t;
-					// AICIIIIIIIIIIIIIIIIIIIIIIIIII
-					/*Atribut* at = new Atribut[t.getNrAtribute()];
-					Inregistrare in[3][2];*/
-					/*for (int i = 0; i < t.getNrAtribute(); i++)
+					ofstream f("tabele.txt", ios::ate);
+					for (int i = 0; i < nrTabele; i++)
 					{
-						for (int j = 0; j < 2; j++)
-						{
-							
-						}
-					}*/
+						f << tabele[i]<<endl;
+					}
 				}
 				else
 				{
@@ -1345,9 +1455,10 @@ public:
 			cuvant = strtok(NULL, " ");
 			if (strcmp(cuvant, "FROM") == 0)
 			{
-				strtok(NULL, " ");
+				cuvant = strtok(NULL, " ");
 				bool gasit = 0;
 				int j;
+				//cout << "*" << cuvant << "*";
 				for (int i = 0; i < nrTabele && gasit == 0; i++)
 				{
 					if (strcmp(cuvant, tabele[i].getNumeTabela()) == 0)
@@ -1362,8 +1473,14 @@ public:
 					Tabela t = tabele[j];
 					Comanda DF;
 					DF.deleteFrom(comanda, t);
-					cout << t;
-					
+					//facem update la tabele
+					tabele[j] = t;
+					//cout << t;
+					/*ofstream f("tabele.txt", ios::ate);
+					for (int i = 0; i < nrTabele; i++)
+					{
+						f << tabele[i] << endl;
+					}*/
 				}
 				else
 				{
