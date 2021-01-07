@@ -11,6 +11,7 @@ using namespace std;
 
 //INSERT INTO studenti VALUES (Bogdan, 20, 6), (Ovidiu, 21, 7.5) 
 //create table studenti ((nume, text, 255, necunoscut), (varsta, integer, 20, 18), (media, float, 10, 2.5))
+//update studenti set nume = bogdan where varsta = 21
 
 int main()
 {
