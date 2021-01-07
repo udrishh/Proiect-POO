@@ -512,8 +512,9 @@ public:
 			}
 		}
 	}
-	void stergeInregistrare(const char* cuvant)
+	/*void stergeInregistrare(const char* cuvant)
 	{
+		int pozitie = 0;
 		if (strcmp(tipAtribut, "TEXT") == 0)
 		{
 			for (int i = 0; i < nrInregistrari; i++)
@@ -570,6 +571,11 @@ public:
 				}
 			}
 		}
+	}*/
+	void stergeInregistrarePozitie(int pozitie)
+	{
+		inregistrari.erase(inregistrari.begin() + pozitie);
+		nrInregistrari--;
 	}
 	//friend class Tabela;
 	friend class Inregistrare;
@@ -1275,7 +1281,38 @@ parantezaStanga++;
 			}
 			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
 			
-			tempAtribute[pozitie].stergeInregistrare(cuvant);
+			//cout << pozitie << endl;
+
+			for (int i = 0; i < t.getNrAtribute(); i++)
+			{
+
+				tempAtribute[i].stergeInregistrarePozitie(pozitie);
+				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
+				//{
+					//tempAtribute[i].stergeInregistrare(cuvant);
+					//if (j == pozitie)
+					//{
+						//tempAtribute[i].stergeInregistrarePozitie(cuvant);
+					//}
+				//}
+			}
+
+			//pozitie = tempAtribute->cautaPozitie(cuvant);
+			//Inregistrare* tempInregistrari = new Inregistrare[tempAtribute->getNrInregistrari()];
+			//vector < vector <Atribut> > Mat(6, std::vector<Inregistrare>(6));
+			//vector<Inregistrare> tempInregistrari;
+			//tempInregistrari = tempAtribute.getInregistrari()[1];
+			//for (int i = 0; i < tempAtribute->getNrInregistrari(); i++)
+			//{
+				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
+				//{
+					//if (j == pozitie)
+					//{
+						//cout << tempInregistrari[i];
+					//}
+				//}
+			//}
+			
 			//t.setAtribute(tempAtribute, t.getNrAtribute());
 
 			//O PARTE DIN SELECT
