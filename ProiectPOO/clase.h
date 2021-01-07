@@ -1394,6 +1394,7 @@ parantezaStanga++;
 
 			for (int i = 0; i < t.getNrAtribute(); i++)
 			{
+
 				cout << tempAtribute[i].getInregistrari()[pozitie];
 				//tempAtribute[i].stergeInregistrarePozitie(pozitie);
 				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
@@ -1546,9 +1547,161 @@ parantezaStanga++;
 
 	}
 	//neterminat
-	void update(string comanda, Tabela& t)
+	void update(string comanda, Tabela& t)//update studenti set varsta = 22 where nume = bogdan
 	{
 
+		char* cuvant;
+		char* copie;
+		string aux;
+		copie = new char[comanda.length() + 1];
+		strcpy(copie, comanda.c_str());
+		cuvant = strtok(copie, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		if (strcmp(cuvant, "SET") != 0)
+		{
+			cout << cuvant;
+			throw exception("Comanda invalida !");
+		}
+		cuvant = strtok(NULL, " "); //nume atribut de cautat
+		//verificam daca numele de atribut este valid
+
+		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
+		tempAtribute = t.getAtribute();
+		bool gasit = 0;
+		char numeAtribut1[255] = "";
+		char tipAtribut[255] = "";
+		Atribut atributDeCautat;
+		int pozitie1 = 99;
+		strcpy_s(numeAtribut1, strlen(cuvant) + 1, cuvant);
+		for (int i = 0; i < t.getNrAtribute() && gasit == 0; i++)
+		{
+			if (strcmp(tempAtribute[i].getNumeAtribut(), numeAtribut1) == 0)
+			{
+				gasit = 1;
+				strcpy_s(tipAtribut, strlen(tempAtribute[i].getTipAtribut()) + 1, tempAtribute[i].getTipAtribut());
+				atributDeCautat = tempAtribute[i];
+				pozitie1 = i;
+			}
+		}
+		if (gasit)
+		{
+			cuvant = strtok(NULL, " ");
+			if (strcmp(cuvant, "=") != 0)
+			{
+				throw exception("Comanda este invalida !");
+			}
+			cuvant = strtok(NULL, " ");
+			char inclocuimCu[255] = "";//update studenti set varsta = 22 where nume = bogdan
+			strcpy_s(inclocuimCu, strlen(cuvant) + 1, cuvant); //22
+			cuvant = strtok(NULL, " ");
+			if (strcmp(cuvant, "WHERE") != 0)
+			{
+				throw exception("Comanda este invalida !");
+			}
+			//
+			cuvant = strtok(NULL, " ");
+			Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
+			tempAtribute = t.getAtribute();
+			bool gasit = 0;
+			char numeAtribut1[255] = "";
+			char tipAtribut[255] = "";
+			Atribut atributDeCautat;
+			int pozitie2 = 99;
+			strcpy_s(numeAtribut1, strlen(cuvant) + 1, cuvant);
+			for (int i = 0; i < t.getNrAtribute() && gasit == 0; i++)
+			{
+				if (strcmp(tempAtribute[i].getNumeAtribut(), numeAtribut1) == 0)
+				{
+					gasit = 1;
+					strcpy_s(tipAtribut, strlen(tempAtribute[i].getTipAtribut()) + 1, tempAtribute[i].getTipAtribut());
+					atributDeCautat = tempAtribute[i];
+					pozitie2 = i;
+				}
+			}
+			if (gasit)
+			{
+				cuvant = strtok(NULL, " ");
+				if (strcmp(cuvant, "=") != 0)
+				{
+					throw exception("Comanda este invalida !");
+				}
+				cuvant = strtok(NULL, " ");
+				//pozite 2 = pozitie nume_col2 in vector atribute
+				int pozitie3 = 99;
+				char tipAtribut[100];
+				strcpy_s(tipAtribut,strlen(tempAtribute[pozitie2].getTipAtribut())+1,tempAtribute[pozitie2].getTipAtribut());
+				//verificatm tipul atributului
+
+				if (strcmp(tipAtribut, "TEXT") == 0)
+				{
+					for (int i = 0; i < tempAtribute[pozitie2].getNrInregistrari(); i++)
+					{
+						if (strcmp(tempAtribute[pozitie2].getInregistrari()[i].getContinutText(),cuvant)==0)
+						{
+							pozitie3 = i;
+						}
+					}
+				}
+				else if (strcmp(tipAtribut, "INTEGER") == 0)
+				{
+					int integer = 0;
+					for (unsigned i = 0; i < strlen(cuvant); i++)
+					{
+						integer = integer * 10 + int(cuvant[i]) - 48;
+					}
+					for (int i = 0; i < tempAtribute[pozitie2].getNrInregistrari(); i++)
+					{
+						if (tempAtribute[pozitie2].getInregistrari()[i].getContinutInteger() == integer)
+						{
+							pozitie3 = i;
+						}
+					}
+				}
+				else if (strcmp(tipAtribut, "FLOAT") == 0)
+				{
+					float valFloat = 0;
+					float zecimale = 1;
+					for (unsigned i = 0; i < strlen(cuvant); i++)
+					{
+						if (cuvant[i] != '.')
+						{
+							valFloat = valFloat * 10 + int(cuvant[i]) - 48;
+						}
+						else if (cuvant[i] == '.')
+						{
+							zecimale = zecimale * 10;
+						}
+					}
+					valFloat = valFloat / zecimale;
+					for (int i = 0; i < tempAtribute[pozitie2].getNrInregistrari(); i++)
+					{
+						if (tempAtribute[pozitie2].getInregistrari()[i].getContinutFloat() == valFloat)
+						{
+							pozitie3 = i;
+						}
+					}
+				}
+
+
+				/*for (int i = 0; i < tempAtribute[pozitie2].getNrInregistrari(); i++)
+				{
+					if (tempAtribute[pozitie2].getInregistrari()[i].getContinutInteger() == 20)
+					{
+						pozitie3 = i;
+					}
+				}*/
+				cout << pozitie1 << " " <<pozitie3;
+				//atribut[pozitie1] intregistrare[pozitie3] = inlocuitCu
+				//tempAtribute[pozitie1].setInregistrari()[pozitie3];
+				vector<Inregistrare> tempInregistrari=tempAtribute[pozitie1].getInregistrari();
+				tempInregistrari[pozitie3].setContinutText("test");
+				tempAtribute[pozitie1].setInregistrari(tempInregistrari, tempAtribute->getNrInregistrari());
+				t.setAtribute(tempAtribute, t.getNrAtribute());
+			}
+			
+			//
+		}
 	}
 
 };
@@ -1762,15 +1915,42 @@ public:
 				}
 				else
 					throw exception("Comanda invalida !");
+			}
+			else //select nume, varsta from studenti where nume = bogdan
+			{
+
+			}
+		}
+		else  if (strcmp(cuvant, "UPDATE") == 0) //update studenti set varsta = 22 where nume = bogdan
+		{
+			cuvant = strtok(NULL, " ");
+			bool gasit = 0;
+			int j;
+			for (int i = 0; i < nrTabele && gasit == 0; i++)
+			{
+				if (strcmp(cuvant, tabele[i].getNumeTabela()) == 0)
+				{
+					gasit = 1;
+					j = i;
 				}
 			}
-		
+			if (gasit)
+			{
+
+				Tabela t = tabele[j];
+				Comanda Up;
+				Up.update(comanda, t);
+				tabele[j] = t;
+			}
+			else
+			{
+				throw exception("Tabela nu exista!");
+			}
+		}
 		else
 		{
 			throw exception("Comanda necunoscuta!");
-		}
-		
+		}		
 	}
-
 };
 // commit text proba
