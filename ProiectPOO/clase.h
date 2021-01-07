@@ -133,8 +133,18 @@ public:
 };
 ostream& operator<<(ostream& out, Inregistrare i)
 {
-	
-	out << i.continutInteger<<" "<<i.continutFloat<<" "<<" "<<i.continutText;
+	if (i.continutInteger != 0)
+	{
+		out << i.continutInteger << " ";
+	}
+	if (i.continutFloat != 0)
+	{
+		out << i.continutFloat << " ";
+	}
+	if (i.continutText != nullptr)
+	{
+		out<< i.continutText<<" ";
+	}
 	return out;
 }
 istream& operator>>(istream& in, Inregistrare& i)
@@ -1238,7 +1248,7 @@ parantezaStanga++;
 	//DELETE FROM STUDENTI WHERE MEDIA = 4
 	void deleteFrom(string comanda, Tabela& t)
 	{
-
+		
 		char* cuvant;
 		char* copie;
 		copie = new char[comanda.length() + 1];
@@ -1334,6 +1344,103 @@ parantezaStanga++;
 	//neterminat
 	void selectAllFrom(string comanda, Tabela& t)
 	{
+
+		//delete from studenti where nume = bogdan
+		//select all from studenti where nume = bogdan
+		char* cuvant;
+		char* copie;
+		copie = new char[comanda.length() + 1];
+		strcpy(copie, comanda.c_str());
+		cuvant = strtok(copie, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		cuvant = strtok(NULL, " ");
+		if (strcmp(cuvant, "WHERE") != 0)
+		{
+			throw exception("Comanda este invalida !");
+		}
+		cuvant = strtok(NULL, " "); //nume atribut de cautat
+		//verificam daca numele de atribut este valid
+
+		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
+		tempAtribute = t.getAtribute();
+		bool gasit = 0;
+		char numeAtribut[255] = "";
+		char tipAtribut[255] = "";
+		Atribut atributDeCautat;
+		int pozitie = 0;
+		strcpy_s(numeAtribut, strlen(cuvant) + 1, cuvant);
+		for (int i = 0; i < t.getNrAtribute() && gasit == 0; i++)
+		{
+			if (strcmp(tempAtribute[i].getNumeAtribut(), numeAtribut) == 0)
+			{
+				gasit = 1;
+				strcpy_s(tipAtribut, strlen(tempAtribute[i].getTipAtribut()) + 1, tempAtribute[i].getTipAtribut());
+				atributDeCautat = tempAtribute[i];
+				pozitie = i;
+			}
+		}
+		if (gasit)
+		{
+			cuvant = strtok(NULL, " ");
+			if (strcmp(cuvant, "=") != 0)
+			{
+				throw exception("Comanda este invalida !");
+			}
+			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
+
+			//cout << pozitie << endl;
+
+			for (int i = 0; i < t.getNrAtribute(); i++)
+			{
+				cout << tempAtribute[i].getInregistrari()[pozitie];
+				//tempAtribute[i].stergeInregistrarePozitie(pozitie);
+				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
+				//{
+					//tempAtribute[i].stergeInregistrare(cuvant);
+					//if (j == pozitie)
+					//{
+						//tempAtribute[i].stergeInregistrarePozitie(cuvant);
+					//}
+				//}
+			}
+
+			//pozitie = tempAtribute->cautaPozitie(cuvant);
+			//Inregistrare* tempInregistrari = new Inregistrare[tempAtribute->getNrInregistrari()];
+			//vector < vector <Atribut> > Mat(6, std::vector<Inregistrare>(6));
+			//vector<Inregistrare> tempInregistrari;
+			//tempInregistrari = tempAtribute.getInregistrari()[1];
+			//for (int i = 0; i < tempAtribute->getNrInregistrari(); i++)
+			//{
+				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
+				//{
+					//if (j == pozitie)
+					//{
+						//cout << tempInregistrari[i];
+					//}
+				//}
+			//}
+
+			//t.setAtribute(tempAtribute, t.getNrAtribute());
+
+			//O PARTE DIN SELECT
+
+			/*for (int i = 0; i < t.getNrAtribute(); i++)
+			{
+				cout << tempAtribute[i] << " ";
+			}*/
+
+			//cout << "Inregistrarea a fost stearsa!" << endl;
+
+		}
+		else
+		{
+			throw exception("Nume atribut invalid!");
+		}
+
+
+		/*
 		char* cuvant;
 		char* copie;
 		copie = new char[comanda.length() + 1];
@@ -1400,7 +1507,7 @@ parantezaStanga++;
 					}
 				}
 			}
-
+			
 			/*Inregistrare* tempInr = new Inregistrare[tempAtribute[pozitie].getNrInregistrari()];
 			vector <Inregistrare> tempI = tempAtribute[pozitie].getInregistrari();
 			int pozitie2 = 0;
@@ -1423,7 +1530,7 @@ parantezaStanga++;
 			/*for (int i = 0; i < t.getNrAtribute(); i++)
 			{
 				cout << tempAtribute[i] << " ";
-			}*/
+			}
 
 			//cout << "Inregistrarea a fost stearsa!" << endl;
 
@@ -1431,7 +1538,7 @@ parantezaStanga++;
 		else
 		{
 			throw exception("Nume atribut invalid!");
-		}
+		}*/
 	}
 	
 	void selectFromWhat(string comanda, Tabela& t)
