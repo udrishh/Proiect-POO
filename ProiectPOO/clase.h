@@ -124,6 +124,46 @@ public:
 		}
 	}
 
+	void updateInregistrare(const char* updateWith, const char* tipAtribut)
+	{
+		if (strcmp(tipAtribut, "TEXT") == 0)
+		{
+			if (continutText != nullptr)
+			{
+				delete[] continutText;
+			}
+			continutText = new char[strlen(updateWith) + 1];
+			strcpy_s(continutText, strlen(updateWith) + 1, updateWith);
+		}
+		else if (strcmp(tipAtribut, "INTEGER") == 0)
+		{
+			int integer = 0;
+			for (unsigned i = 0; i < strlen(updateWith); i++)
+			{
+				integer = integer * 10 + int(updateWith[i]) - 48;
+			}
+			continutInteger = integer;
+		}
+		else if (strcmp(tipAtribut, "FLOAT") == 0)
+		{
+			float valFloat = 0;
+			float zecimale = 1;
+			for (unsigned i = 0; i < strlen(updateWith); i++)
+			{
+				if (updateWith[i] != '.')
+				{
+					valFloat = valFloat * 10 + int(updateWith[i]) - 48;
+				}
+				else if (updateWith[i] == '.')
+				{
+					zecimale = zecimale * 10;
+				}
+			}
+			valFloat = valFloat / zecimale;
+			continutFloat = valFloat;
+		}
+	}
+
 	friend class Atribut;
 	friend ostream& operator<<(ostream&, Inregistrare);
 	friend istream& operator>>(istream&, Inregistrare&);
@@ -586,6 +626,11 @@ public:
 	{
 		inregistrari.erase(inregistrari.begin() + pozitie);
 		nrInregistrari--;
+	}
+
+	void updateAtribut(int pozitieI, const char* updateWith)
+	{
+		inregistrari[pozitieI].updateInregistrare(updateWith, tipAtribut);
 	}
 	//friend class Tabela;
 	friend class Inregistrare;
@@ -1592,8 +1637,8 @@ parantezaStanga++;
 				throw exception("Comanda este invalida !");
 			}
 			cuvant = strtok(NULL, " ");
-			char inclocuimCu[255] = "";//update studenti set varsta = 22 where nume = bogdan
-			strcpy_s(inclocuimCu, strlen(cuvant) + 1, cuvant); //22
+			char inlocuimCu[255] = "";//update studenti set varsta = 22 where nume = bogdan
+			strcpy_s(inlocuimCu, strlen(cuvant) + 1, cuvant); //22
 			cuvant = strtok(NULL, " ");
 			if (strcmp(cuvant, "WHERE") != 0)
 			{
@@ -1691,13 +1736,11 @@ parantezaStanga++;
 						pozitie3 = i;
 					}
 				}*/
-				cout << pozitie1 << " " <<pozitie3;
-				//atribut[pozitie1] intregistrare[pozitie3] = inlocuitCu
-				//tempAtribute[pozitie1].setInregistrari()[pozitie3];
-				vector<Inregistrare> tempInregistrari=tempAtribute[pozitie1].getInregistrari();
-				tempInregistrari[pozitie3].setContinutText("test");
-				tempAtribute[pozitie1].setInregistrari(tempInregistrari, tempAtribute->getNrInregistrari());
-				t.setAtribute(tempAtribute, t.getNrAtribute());
+				cout << pozitie1 << " " <<pozitie3<<" "<<inlocuimCu;
+				tempAtribute[pozitie1].updateAtribut(pozitie3, inlocuimCu);
+				//cout << tempAtribute[0];
+				//t.setAtribute(tempAtribute, t.getNrAtribute());
+
 			}
 			
 			//
