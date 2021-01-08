@@ -40,6 +40,47 @@ public:
 			delete continutText;
 		}
 	}
+	void serializare()
+	{
+		ofstream f("fisier_binar.bin", ios::out | ios::binary | ios::ate | ios::app);
+		if (continutText != nullptr)
+		{
+			int length = strlen(continutText);
+			f.write((char*)&length, sizeof(length));
+			f.write(continutText, length + 1);
+		}
+		if (continutInteger != 0)
+		{
+			f.write((char*)&continutInteger, sizeof(continutInteger));
+		}
+		if (continutFloat != 0)
+		{
+			f.write((char*)&continutFloat, sizeof(continutFloat));
+		}
+		
+		f.close();
+	}
+	void deserializare()
+	{
+		ifstream f("fisier_binar.bin", ios::binary);
+		if (continutInteger != 0)
+		{
+			f.read((char*)&continutInteger, sizeof(continutInteger));
+		}
+		if (continutFloat != 0)
+		{
+			f.read((char*)&continutFloat, sizeof(continutFloat));
+		}
+		if (continutText != nullptr)
+		{
+			int length = 0;
+			f.read((char*)&length, sizeof(length));
+			delete[] continutText;
+			continutText = new char[length + 1];
+			f.read(continutText, length + 1);
+		}
+		f.close();
+	}
 	Inregistrare(const Inregistrare& i)
 	{
 		this->continutFloat = i.continutFloat;
@@ -256,6 +297,71 @@ public:
 			delete[] valoareImplicitaText;
 		}
 		
+	}
+	
+	void serializare()
+	{
+		ofstream f("fisier_binar.bin", ios::out | ios::binary | ios::ate | ios::app);
+		int length = strlen(numeAtribut);
+		f.write((char*)&length, sizeof(length));
+		f.write(numeAtribut, length + 1);
+		length = strlen(tipAtribut);
+		f.write((char*)&length, sizeof(length));
+		f.write(tipAtribut, length + 1);
+		f.write((char*)&dimensiuneAtribut, sizeof(dimensiuneAtribut));
+		if (valoareImplicitaNumeric != 0)
+		{
+			f.write((char*)&valoareImplicitaNumeric, sizeof(valoareImplicitaNumeric));
+		}
+		if (valoareImplicitaText != nullptr)
+		{
+			length = strlen(valoareImplicitaText);
+			f.write((char*)&length, sizeof(length));
+			f.write(valoareImplicitaText, length + 1);
+		}
+		
+		f.write((char*)&nrInregistrari, sizeof(nrInregistrari));
+		for (int i = 0; i < nrInregistrari; i++)
+		{
+			//f.write((char*)&inregistrari[i], sizeof(inregistrari[i]));
+			inregistrari[i].serializare();
+		}
+		
+	}
+	
+	void deserializare()
+	{
+		ifstream f("fisier_binar.bin", ios::binary);
+		int length = 0;
+		f.read((char*)&length, sizeof(length));
+		delete[] numeAtribut;
+		numeAtribut = new char[length + 1];
+		f.read(numeAtribut, length + 1);
+
+		length = 0;
+		f.read((char*)&length, sizeof(length));
+		delete[] tipAtribut;
+		tipAtribut = new char[length + 1];
+		f.read(tipAtribut, length + 1);
+
+		f.read((char*)&dimensiuneAtribut, sizeof(dimensiuneAtribut));
+		f.read((char*)&valoareImplicitaNumeric, sizeof(valoareImplicitaNumeric));
+
+		length = 0;
+		f.read((char*)&length, sizeof(length));
+		delete[] valoareImplicitaText;
+		valoareImplicitaText = new char[length + 1];
+		f.read(valoareImplicitaText, length + 1);
+
+		f.read((char*)&nrInregistrari, sizeof(nrInregistrari));
+
+		for (int i = 0; i < nrInregistrari; i++)
+		{
+			f.read((char*)&inregistrari[i], sizeof(inregistrari[i]));
+		}
+		f.close();
+
+
 	}
 	Atribut(const Atribut& a)
 	{
@@ -772,6 +878,42 @@ public:
 			delete[] numeTabela;
 		}
 	}
+	void serializare()
+	{
+		ofstream f("fisier_binar.bin", ios::out | ios::binary | ios::ate | ios::app);
+		int length = strlen(numeTabela);
+		f.write((char*)&length, sizeof(length));
+		f.write(numeTabela, length + 1);
+		f.write((char*)&nrAtribute, sizeof(nrAtribute));
+		f.close();
+		for (int i = 0; i < nrAtribute; i++)
+		{
+			//f.write((char*)&atribute[i], sizeof(atribute[i]));
+			atribute[i].serializare();
+			
+		}
+		
+	}
+	void deserializare()
+	{
+		ifstream f("fisier_binar.bin", ios::binary);
+
+		int length = 0;
+		f.read((char*)&length, sizeof(length));
+		delete[] numeTabela;
+		numeTabela = new char[length + 1];
+		f.read(numeTabela, length + 1);
+
+		f.read((char*)&nrAtribute, sizeof(nrAtribute));
+
+		delete[] atribute;
+		atribute = new Atribut[nrAtribute];
+		for (int i = 0; i < nrAtribute; i++)
+		{
+			f.read((char*)&atribute[i], sizeof(atribute[i]));
+		}
+		f.close();
+	}
 	Tabela(const Tabela& t)
 	{
 		if (t.numeTabela != nullptr)
@@ -1147,6 +1289,7 @@ public:
 			if (strcmp(tabele[i].getNumeTabela(), numeTabela) == 0)
 			{
 				cout <<endl<< tabele[i]<<endl;
+				tabele[i].serializare();
 				gasit = 1;
 			}
 		}
