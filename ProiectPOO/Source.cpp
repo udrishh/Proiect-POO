@@ -66,6 +66,8 @@ int main()
 	}
 	g.close();
 	cout << "Introduceti comanda SQL dorita sau 0 pentru a iesi" << endl;
+
+
 	cout << "> ";
 	string comanda;
 	//prelucreaza comanda
