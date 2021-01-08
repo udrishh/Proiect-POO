@@ -1440,6 +1440,7 @@ parantezaStanga++;
 			for (int i = 0; i < t.getNrAtribute() ; i++)
 			{
 				cout << tempAtribute[i].getNumeAtribut() << " : ";
+				cout << tempAtribute[i].getInregistrari()[pozitie]<<" | ";
 				//tempAtribute[i].stergeInregistrarePozitie(pozitie);
 				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
 				//{
