@@ -1436,11 +1436,11 @@ parantezaStanga++;
 			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
 
 			//cout << pozitie << endl;
-
-			for (int i = 0; i < t.getNrAtribute(); i++)
+			
+			for (int i = 0; i < t.getNrAtribute() ; i++)
 			{
-
-				cout << tempAtribute[i].getInregistrari()[pozitie];
+				cout << tempAtribute[i].getNumeAtribut() << " : ";
+				cout << tempAtribute[i].getInregistrari()[pozitie]<<" | ";
 				//tempAtribute[i].stergeInregistrarePozitie(pozitie);
 				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
 				//{
