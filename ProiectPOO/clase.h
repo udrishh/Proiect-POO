@@ -1424,8 +1424,10 @@ parantezaStanga++;
 				strcpy_s(tipAtribut, strlen(tempAtribute[i].getTipAtribut()) + 1, tempAtribute[i].getTipAtribut());
 				atributDeCautat = tempAtribute[i];
 				pozitie = i;
+				strcpy_s(tipAtribut, strlen(tempAtribute[i].getTipAtribut()) + 1, tempAtribute[i].getTipAtribut());
 			}
 		}
+		//pozitie=pozitie atribut (nume)
 		if (gasit)
 		{
 			cuvant = strtok(NULL, " ");
@@ -1436,20 +1438,70 @@ parantezaStanga++;
 			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
 
 			//cout << pozitie << endl;
+			int pozitie2 = 0;
+			
+			if (strcmp(tipAtribut, "TEXT") == 0)
+			{
+				//
+				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
+				{
+					if (strcmp(cuvant, tempAtribute[pozitie].getInregistrari()[i].getContinutText()) == 0)
+					{
+						pozitie2 = i;
+					}
+				}
+
+			}
+			else if (strcmp(tipAtribut, "INTEGER") == 0)
+			{
+				int integer = 0;
+				for (unsigned i = 0; i < strlen(cuvant); i++)
+				{
+					integer = integer * 10 + int(cuvant[i]) - 48;
+				}
+				//
+				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
+				{
+					if (integer==tempAtribute[pozitie].getInregistrari()[i].getContinutInteger())
+					{
+						pozitie2 = i;
+					}
+
+				}
+			}
+			else if (strcmp(tipAtribut, "FLOAT") == 0)
+			{
+				float valFloat = 0;
+				float zecimale = 1;
+				for (unsigned i = 0; i < strlen(cuvant); i++)
+				{
+					if (cuvant[i] != '.')
+					{
+						valFloat = valFloat * 10 + int(cuvant[i]) - 48;
+					}
+					else if (cuvant[i] == '.')
+					{
+						zecimale = zecimale * 10;
+					}
+				}
+				valFloat = valFloat / zecimale;
+				//
+				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
+				{
+					if (valFloat == tempAtribute[pozitie].getInregistrari()[i].getContinutFloat())
+					{
+						pozitie2 = i;
+					}
+
+				}
+			}
+
+			
 			
 			for (int i = 0; i < t.getNrAtribute() ; i++)
 			{
 				cout << tempAtribute[i].getNumeAtribut() << " : ";
-				cout << tempAtribute[i].getInregistrari()[pozitie]<<" | ";
-				//tempAtribute[i].stergeInregistrarePozitie(pozitie);
-				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
-				//{
-					//tempAtribute[i].stergeInregistrare(cuvant);
-					//if (j == pozitie)
-					//{
-						//tempAtribute[i].stergeInregistrarePozitie(cuvant);
-					//}
-				//}
+				cout << tempAtribute[i].getInregistrari()[pozitie2]<<" | ";
 			}
 
 			//pozitie = tempAtribute->cautaPozitie(cuvant);
