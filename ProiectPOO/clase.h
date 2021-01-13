@@ -4,7 +4,6 @@
 #include <fstream>
 #include <iomanip>
 #include <vector>
-#include <windows.h>
 using namespace std;
 
 class Inregistrare
@@ -255,8 +254,6 @@ ifstream& operator>>(ifstream& in, Inregistrare& i)
 
 	return in;
 }
-
-
 
 class Atribut
 {
@@ -830,6 +827,7 @@ ifstream& operator>>(ifstream& in, Atribut& a)
 	{
 		in >> a.valoareImplicitaNumeric;
 	}
+	in>>a.nrInregistrari;//AICI E O GRESEALA
 	return in;
 }
 istream& operator>>(istream& in, Atribut& a)
