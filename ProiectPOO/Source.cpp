@@ -14,62 +14,116 @@ using namespace std;
 //update studenti set nume = bogdan where varsta = 21
 //select all from studenti where nume = bogdan
 
-int main()
+int main(int argc, char* argv[])
 {
-	//citeste tabelele din fisier
+	string comanda;
 	char auxText[256]="";
 	int auxInteger=0;
 	float auxFloat=0;
+	string s;
 	Tabela tempt;
 	Atribut* tempa;
-	Inregistrare* tempi;
-	ifstream g("tabele.txt",ios::ate);
-	//momentan nu merge
+	int nrAtribute;
+	int nrInregistrari;
+	Inregistrare tempIng;
+	vector<Inregistrare> tempi;
+	ifstream g("tabele.txt");
 	if (g.peek() != ifstream::traits_type::eof())
 	{
 		while (!g.eof())
 		{
 			g >> tempt;
-			tempa = new Atribut[tempt.getNrAtribute()];
-			
-			for (int i = 0; i < tempt.getNrAtribute(); i++)
+			if (strlen(tempt.getNumeTabela()) <= 1)
+			{
+				continue;
+			}
+			nrAtribute = tempt.getNrAtribute();
+			tempa = new Atribut[nrAtribute];
+			for (int i = 0; i < nrAtribute; i++)
 			{
 				g >> tempa[i];
-				int nrInregistrari = 0;
-				g >> nrInregistrari;
-				tempi = new Inregistrare[nrInregistrari];
+				string tipAtribut = tempa[i].getTipAtribut();
+				//cout << tipAtribut;
+				nrInregistrari = tempa[i].getNrInregistrari();
+				
 				for (int j = 0; j < nrInregistrari; j++)
 				{
-					if(strcmp(tempa[i].getTipAtribut(),"TEXT")==0)
+					if (tipAtribut == "TEXT")
 					{
-						g >> auxText;
-						tempi[i].setContinutText(auxText);
+						string text;
+						g >> text;
+						tempIng.setContinutText(text.c_str());
 					}
-					else if (strcmp(tempa[i].getTipAtribut(), "INTEGER") == 0)
+					else if (tipAtribut == "INTEGER")
 					{
-						g >> auxInteger;
-						tempi[i].setContinutInteger(auxInteger);
+						int integer;
+						g >> integer;
+						tempIng.setContinutInteger(integer);
 					}
-					else if (strcmp(tempa[i].getTipAtribut(), "FLOAT") == 0)
+					else if (tipAtribut == "FLOAT")
 					{
-						g >> auxFloat;
-						tempi[i].setContinutFloat(auxFloat);
+						float valFloat;
+						g >> valFloat;
+						
+						tempIng.setContinutFloat(valFloat);
 					}
+					tempi.push_back(tempIng);
 				}
-				//tempa[i].setInregistrari(tempi, nrInregistrari);
-				delete[] tempi;
+				tempa[i].setInregistrari(tempi, nrInregistrari);
+				tempi.clear();
 			}
-			tempt.setAtribute(tempa, tempt.getNrAtribute());
-			delete[] tempa;
-			cout << tempt;
+			tempt.setAtribute(tempa, nrAtribute);
+			tabele.push_back(tempt);
+			nrTabele++;
+			cout << tempt << endl;
 		}
 	}
-	g.close();
+	g.close();//NU MERGE SELECT ALL PE TABELE CITITE DIN FISIER
+	if (argc > 1)
+	{
+		for (int i = 1; i < argc; i++)
+		{
+			cout << "Se executa comenzile din fisierul " << argv[i] << endl;
+			ifstream g(argv[i]);
+			if (g.peek() != ifstream::traits_type::eof())
+			{
+				while (!g.eof())
+				{
+					getline(g, comanda);
+					for (int i = 0; i < comanda.length(); i++)
+					{
+						if (islower(comanda[i]))
+						{
+							comanda[i] = toupper(comanda[i]);
+						}
+					}
+					try
+					{
+						Input i(comanda);
+						i.findKeyWord(comanda);
+						ofstream f("tabele.txt", ios::trunc);//AICI ERA ATE
+						for (int i = 0; i < nrTabele; i++)
+						{
+							f << tabele[i];
+						}
+						f.close();
+					}
+					catch (exception e)
+					{
+						cout << endl << e.what() << endl;
+					}
+					catch (...)
+					{
+						cout << "A avut loc o eroare!";
+					}
+				}
+			}
+			g.close();
+		}
+		cout << endl << "Toate comenzile din fisiere au fost parcurse!" << endl;
+	}
 	cout << "Introduceti comanda SQL dorita sau 0 pentru a iesi" << endl;
-
-
 	cout << "> ";
-	string comanda;
 	//prelucreaza comanda
 	getline(cin, comanda);
 	while (comanda[0] != '0')
@@ -85,6 +139,12 @@ int main()
 		{
 			Input i(comanda);
 			i.findKeyWord(comanda);
+			ofstream f("tabele.txt", ios::trunc);//AICI ERA ATE
+			for (int i = 0; i < nrTabele; i++)
+			{
+				f << tabele[i];
+			}
+			f.close();
 		}
 		catch (exception e)
 		{
@@ -99,4 +159,5 @@ int main()
 		cout << "> ";
 		getline(cin, comanda);
 	}
+	
 }
