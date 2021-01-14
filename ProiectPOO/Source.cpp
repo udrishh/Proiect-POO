@@ -25,8 +25,6 @@ int main(int argc, char* argv[])
 	Atribut* tempa;
 	int nrAtribute;
 	int nrInregistrari;
-	Inregistrare tempIng;
-	vector<Inregistrare> tempi;
 	ifstream g("tabele.txt");
 	if (g.peek() != ifstream::traits_type::eof())
 	{
@@ -43,9 +41,11 @@ int main(int argc, char* argv[])
 			{
 				g >> tempa[i];
 				string tipAtribut = tempa[i].getTipAtribut();
-				//cout << tipAtribut;
+
 				nrInregistrari = tempa[i].getNrInregistrari();
-				
+				vector<Inregistrare> tempi;
+				tempi.clear();
+				Inregistrare tempIng;
 				for (int j = 0; j < nrInregistrari; j++)
 				{
 					if (tipAtribut == "TEXT")
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 			cout << tempt << endl;
 		}
 	}
-	g.close();//NU MERGE SELECT ALL PE TABELE CITITE DIN FISIER
+	g.close();
 	if (argc > 1)
 	{
 		for (int i = 1; i < argc; i++)
@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
 					{
 						Input i(comanda);
 						i.findKeyWord(comanda);
-						ofstream f("tabele.txt", ios::trunc);//AICI ERA ATE
+						ofstream f("tabele.txt", ios::trunc);
 						for (int i = 0; i < nrTabele; i++)
 						{
 							f << tabele[i];
@@ -139,7 +139,7 @@ int main(int argc, char* argv[])
 		{
 			Input i(comanda);
 			i.findKeyWord(comanda);
-			ofstream f("tabele.txt", ios::trunc);//AICI ERA ATE
+			ofstream f("tabele.txt", ios::trunc);
 			for (int i = 0; i < nrTabele; i++)
 			{
 				f << tabele[i];
