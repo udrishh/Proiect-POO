@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iomanip>
 #include <vector>
+#include <set>
 using namespace std;
 
 class Inregistrare
@@ -207,7 +208,6 @@ public:
 	friend class Atribut;
 	friend ostream& operator<<(ostream&, Inregistrare);
 	friend istream& operator>>(istream&, Inregistrare&);
-	//friend stringstream& operator<<(stringstream&, Inregistrare);
 	friend ifstream& operator>>(ifstream&, Inregistrare&);
 	
 };
@@ -238,11 +238,7 @@ istream& operator>>(istream& in, Inregistrare& i)
 
 	return in;
 }
-/*stringstream& operator<<(stringstream& out, Inregistrare i)
-{
-	out << i.continutInteger << " " << i.continutFloat << " " << " " << i.continutText;
-	return out;
-}*/
+
 ifstream& operator>>(ifstream& in, Inregistrare& i)
 {
 	in >> i.continutInteger;
@@ -665,66 +661,7 @@ public:
 			}
 		}
 	}
-	/*void stergeInregistrare(const char* cuvant)
-	{
-		int pozitie = 0;
-		if (strcmp(tipAtribut, "TEXT") == 0)
-		{
-			for (int i = 0; i < nrInregistrari; i++)
-			{
-				if (strcmp(inregistrari[i].continutText, cuvant) == 0)
-				{
-					inregistrari.erase(inregistrari.begin() + i);
-					nrInregistrari--;
-				}
-			}
-		}
-		if (strcmp(tipAtribut, "INTEGER") == 0)
-		{
-			Inregistrare inr;
-			int integer = 0;
-			for (unsigned i = 0; i < strlen(cuvant); i++)
-			{
-				integer = integer * 10 + int(cuvant[i]) - 48;
-			}
-			inr.continutInteger = integer;
-			for (int i = 0; i < nrInregistrari; i++)
-			{
-				if (inregistrari[i].continutInteger == inr.continutInteger)
-				{
-					inregistrari.erase(inregistrari.begin() + i);
-					nrInregistrari--;
-				}
-			}
-		}
-		if (strcmp(tipAtribut, "FLOAT") == 0)
-		{
-			Inregistrare inr;
-			float valFloat = 0;
-			float zecimale = 1;
-			for (unsigned i = 0; i < strlen(cuvant); i++)
-			{
-				if (cuvant[i] != '.')
-				{
-					valFloat = valFloat * 10 + int(cuvant[i]) - 48;
-				}
-				else if (cuvant[i] == '.')
-				{
-					zecimale = zecimale * 10;
-				}
-			}
-			valFloat = valFloat / zecimale;
-			inr.continutFloat = valFloat;
-			for (int i = 0; i < nrInregistrari; i++)
-			{
-				if (inregistrari[i].continutFloat == inr.continutFloat)
-				{
-					inregistrari.erase(inregistrari.begin() + i);
-					nrInregistrari--;
-				}
-			}
-		}
-	}*/
+
 	void stergeInregistrarePozitie(int pozitie)
 	{
 		inregistrari.erase(inregistrari.begin() + pozitie);
@@ -827,7 +764,7 @@ ifstream& operator>>(ifstream& in, Atribut& a)
 	{
 		in >> a.valoareImplicitaNumeric;
 	}
-	in>>a.nrInregistrari;//AICI E O GRESEALA
+	in>>a.nrInregistrari;
 	return in;
 }
 istream& operator>>(istream& in, Atribut& a)
@@ -1025,7 +962,6 @@ public:
 		return nrAtribute;
 	}
 
-	//friend class Atribut;
 	friend ofstream& operator<<(ofstream&, Tabela);
 	friend ostream& operator<<(ostream&, Tabela);
 	friend ifstream& operator>>(ifstream&, Tabela&);
@@ -1063,13 +999,6 @@ ifstream& operator>>(ifstream& in, Tabela& t)
 	t.numeTabela = new char[strlen(buffer) + 1];
 	strcpy_s(t.numeTabela, strlen(buffer) + 1, buffer);
 	in >> t.nrAtribute;
-	/*if (t.nrAtribute > 0)
-	{
-		for (int i = 0; i < t.nrAtribute; i++)
-		{
-			in >> t.atribute[i];
-		}
-	}*/
 	return in;
 }
 istream& operator>>(istream& in, Tabela& t)
@@ -1079,13 +1008,6 @@ istream& operator>>(istream& in, Tabela& t)
 	t.numeTabela = new char[strlen(buffer) + 1];
 	strcpy_s(t.numeTabela, strlen(buffer) + 1, buffer);
 	in >> t.nrAtribute;
-	/*if (t.nrAtribute > 0)
-	{
-		for (int i = 0; i < t.nrAtribute; i++)
-		{
-			in >> t.atribute[i];
-		}
-	}*/
 	return in;
 }
 
@@ -1194,12 +1116,10 @@ public:
 						memmove(cuvant, cuvant + 1, strlen(cuvant + 1) + 1);
 					}
 				}
-				atribute[i].setNumeAtribut(cuvant);
-				//cout << "Nume atribut: " << atribute[i].getNumeAtribut() << endl;
+				atribute[i].setNumeAtribut(cuvant);;
 				//tip atribut
 				cuvant = strtok(NULL, ", ");
 				atribute[i].setTipAtribut(cuvant);
-				//cout << "Tip atribut: " << atribute[i].getTipAtribut() << endl;
 				//dimensiune atribut
 				cuvant = strtok(NULL, ", ");
 				//transformam dimensiunea din char in int
@@ -1209,7 +1129,6 @@ public:
 					dimensiune = dimensiune * 10 + int(cuvant[i]) - 48;
 				}
 				atribute[i].setDimensiuneAtribut(dimensiune);
-				//cout << "Dimensiune atribut: " << atribute[i].getDimensiuneAtribut() << endl;
 				//valoare implicita
 				cuvant = strtok(NULL, ", ");
 				//scapam de eventualele )) sau )
@@ -1236,7 +1155,6 @@ public:
 				if (strcmp(atribute[i].getTipAtribut(), "TEXT") == 0)
 				{
 					atribute[i].setValoareImplicitaText(cuvant);
-					//cout << "Valoare implicita atribut: " << atribute[i].getValoareImplicitaText() << endl;
 				}
 				else if (strcmp(atribute[i].getTipAtribut(), "INTEGER") == 0) //transformam valoarea impliicta din text in int sau char
 				{
@@ -1246,7 +1164,6 @@ public:
 						valInt = valInt * 10 + int(cuvant[i]) - 48;
 					}
 					atribute[i].setValoareImplicitaNumeric(float(valInt));
-					//cout << "Valoare implicita atribut: " << atribute[i].getValoareImplicitaNumeric() << endl;
 				}
 				else if (strcmp(atribute[i].getTipAtribut(), "FLOAT") == 0)
 				{
@@ -1265,7 +1182,6 @@ public:
 					}
 					valFloat = valFloat / zecimale;
 					atribute[i].setValoareImplicitaNumeric(valFloat);
-					//cout << "Valoare implicita atribut: " << atribute[i].getValoareImplicitaNumeric() << endl;
 				}
 			}
 			t1.setAtribute(atribute, nrAtribute);
@@ -1329,7 +1245,6 @@ public:
 			throw exception("Tabela nu exista!");
 		}
 	}
-	//insert into studenti values
 
 	//INSERT INTO studenti VALUES (Bogdan, 20, 6), (Ovidiu, 21, 7.5) 
 	void insertInto(string comanda, Tabela& t)
@@ -1420,21 +1335,17 @@ parantezaStanga++;
 						auxiliar[i] = cuvant[i];
 					}
 					strcpy_s(cuvant, strlen(auxiliar) + 1, auxiliar);
-
 				}
 				//verificam daca e null
-
 				tempAtribute[j].adaugaInregistrare(cuvant);//val implicita
 			}
 		}
 	}
 
-	//neterminat
 	//DELETE FROM STUDENTI WHERE NUME = BOGDAN
 	//DELETE FROM STUDENTI WHERE MEDIA = 4
 	void deleteFrom(string comanda, Tabela& t)
-	{
-		
+	{	
 		char* cuvant;
 		char* copie;
 		copie = new char[comanda.length() + 1];
@@ -1448,8 +1359,7 @@ parantezaStanga++;
 			throw exception("Comanda este invalida !");
 		}
 		cuvant = strtok(NULL, " "); //nume atribut de cautat
-		//verificam daca numele de atribut este valid
-		
+		//verificam daca numele de atribut este valid	
 		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
 		tempAtribute = t.getAtribute();
 		bool gasit = 0;
@@ -1476,50 +1386,12 @@ parantezaStanga++;
 				throw exception("Comanda este invalida !");
 			}
 			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
-			
-			//cout << pozitie << endl;
-
 			for (int i = 0; i < t.getNrAtribute(); i++)
 			{
 
 				tempAtribute[i].stergeInregistrarePozitie(pozitie);
-				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
-				//{
-					//tempAtribute[i].stergeInregistrare(cuvant);
-					//if (j == pozitie)
-					//{
-						//tempAtribute[i].stergeInregistrarePozitie(cuvant);
-					//}
-				//}
 			}
-
-			//pozitie = tempAtribute->cautaPozitie(cuvant);
-			//Inregistrare* tempInregistrari = new Inregistrare[tempAtribute->getNrInregistrari()];
-			//vector < vector <Atribut> > Mat(6, std::vector<Inregistrare>(6));
-			//vector<Inregistrare> tempInregistrari;
-			//tempInregistrari = tempAtribute.getInregistrari()[1];
-			//for (int i = 0; i < tempAtribute->getNrInregistrari(); i++)
-			//{
-				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
-				//{
-					//if (j == pozitie)
-					//{
-						//cout << tempInregistrari[i];
-					//}
-				//}
-			//}
-			
-			//t.setAtribute(tempAtribute, t.getNrAtribute());
-
-			//O PARTE DIN SELECT
-
-			/*for (int i = 0; i < t.getNrAtribute(); i++)
-			{
-				cout << tempAtribute[i] << " ";
-			}*/
-
-			cout <<"Inregistrarea a fost stearsa!"<< endl;
-			
+			cout <<"Inregistrarea a fost stearsa!"<< endl;	
 		}
 		else
 		{
@@ -1527,10 +1399,8 @@ parantezaStanga++;
 		}
 	}
 
-	//neterminat
 	void selectAllFrom(string comanda, Tabela& t)
 	{
-
 		//delete from studenti where nume = bogdan
 		//select all from studenti where nume = bogdan
 		char* cuvant;
@@ -1548,7 +1418,6 @@ parantezaStanga++;
 		}
 		cuvant = strtok(NULL, " "); //nume atribut de cautat
 		//verificam daca numele de atribut este valid
-
 		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
 		tempAtribute = t.getAtribute();
 		bool gasit = 0;
@@ -1577,13 +1446,10 @@ parantezaStanga++;
 				throw exception("Comanda este invalida !");
 			}
 			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
-
-			//cout << pozitie << endl;
 			int pozitie2 = 0;
-			
 			if (strcmp(tipAtribut, "TEXT") == 0)
 			{
-				//
+
 				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
 				{
 					if (strcmp(cuvant, tempAtribute[pozitie].getInregistrari()[i].getContinutText()) == 0)
@@ -1591,7 +1457,6 @@ parantezaStanga++;
 						pozitie2 = i;
 					}
 				}
-
 			}
 			else if (strcmp(tipAtribut, "INTEGER") == 0)
 			{
@@ -1600,14 +1465,12 @@ parantezaStanga++;
 				{
 					integer = integer * 10 + int(cuvant[i]) - 48;
 				}
-				//
 				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
 				{
 					if (integer==tempAtribute[pozitie].getInregistrari()[i].getContinutInteger())
 					{
 						pozitie2 = i;
 					}
-
 				}
 			}
 			else if (strcmp(tipAtribut, "FLOAT") == 0)
@@ -1626,69 +1489,42 @@ parantezaStanga++;
 					}
 				}
 				valFloat = valFloat / zecimale;
-				//
 				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
 				{
 					if (valFloat == tempAtribute[pozitie].getInregistrari()[i].getContinutFloat())
 					{
 						pozitie2 = i;
 					}
-
 				}
 			}
-
-			
-			
 			for (int i = 0; i < t.getNrAtribute() ; i++)
 			{
 				cout << tempAtribute[i].getNumeAtribut() << " : ";
 				cout << tempAtribute[i].getInregistrari()[pozitie2]<<" | ";
 			}
-
-			//pozitie = tempAtribute->cautaPozitie(cuvant);
-			//Inregistrare* tempInregistrari = new Inregistrare[tempAtribute->getNrInregistrari()];
-			//vector < vector <Atribut> > Mat(6, std::vector<Inregistrare>(6));
-			//vector<Inregistrare> tempInregistrari;
-			//tempInregistrari = tempAtribute.getInregistrari()[1];
-			//for (int i = 0; i < tempAtribute->getNrInregistrari(); i++)
-			//{
-				//for (int j = 0; j < tempAtribute->getNrInregistrari(); j++)
-				//{
-					//if (j == pozitie)
-					//{
-						//cout << tempInregistrari[i];
-					//}
-				//}
-			//}
-
-			//t.setAtribute(tempAtribute, t.getNrAtribute());
-
-			//O PARTE DIN SELECT
-
-			/*for (int i = 0; i < t.getNrAtribute(); i++)
-			{
-				cout << tempAtribute[i] << " ";
-			}*/
-
-			//cout << "Inregistrarea a fost stearsa!" << endl;
-
 		}
 		else
 		{
 			throw exception("Nume atribut invalid!");
 		}
-
-
-		/*
+	}
+	
+	void selectWhat(string comanda, Tabela& t,set<char*>listaAtribute)
+	{
+		//delete from studenti where nume = bogdan
+		//select all from studenti where nume = bogdan
 		char* cuvant;
 		char* copie;
 		copie = new char[comanda.length() + 1];
 		strcpy(copie, comanda.c_str());
-		cuvant = strtok(copie, " ");
-		cuvant = strtok(NULL, " ");
-		cuvant = strtok(NULL, " ");
-		cuvant = strtok(NULL, " ");
-		cuvant = strtok(NULL, " ");
+		cuvant = strtok(copie, " ");//select
+		for (int i = 0; i < listaAtribute.size(); i++)
+		{
+			cuvant = strtok(NULL, " ");//numeAtribut de afisat
+		}
+		cuvant = strtok(NULL, " ");//from
+		cuvant = strtok(NULL, " ");//numetabel
+		cuvant = strtok(NULL, " ");//where
 		if (strcmp(cuvant, "WHERE") != 0)
 		{
 			throw exception("Comanda este invalida !");
@@ -1710,84 +1546,89 @@ parantezaStanga++;
 				gasit = 1;
 				strcpy_s(tipAtribut, strlen(tempAtribute[i].getTipAtribut()) + 1, tempAtribute[i].getTipAtribut());
 				atributDeCautat = tempAtribute[i];
-				//cout << atributDeCautat<<"*";
 				pozitie = i;
+				strcpy_s(tipAtribut, strlen(tempAtribute[i].getTipAtribut()) + 1, tempAtribute[i].getTipAtribut());
 			}
 		}
 		if (gasit)
 		{
-			//cout << numeAtribut << " ";
 			cuvant = strtok(NULL, " ");
 			if (strcmp(cuvant, "=") != 0)
 			{
 				throw exception("Comanda este invalida !");
 			}
-			cuvant = strtok(NULL, " ");//valoarea 
-			char numeInregistrare[255] = " ";
-			strcpy_s(numeInregistrare, strlen(cuvant) + 1, cuvant);
+			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
+			int pozitie2 = 0;
 
-			//cout << numeInregistrare;
-			pozitie = 0;
-			vector <Inregistrare> tempI = tempAtribute[pozitie].getInregistrari();
-			for (int i = 0; i < tempAtribute->getNrInregistrari(); i++)
+			if (strcmp(tipAtribut, "TEXT") == 0)
 			{
-				
-				if (strcmp(tempAtribute->getNumeAtribut(), numeAtribut) == 0)
+				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
 				{
-					for (int j = 0; j < t.getNrAtribute()-1; j++)
+					if (strcmp(cuvant, tempAtribute[pozitie].getInregistrari()[i].getContinutText()) == 0)
 					{
-						if (strcmp(tempI[j].getContinutText(), numeInregistrare) == 0)
-							for (int k = 0; k < tempAtribute->getNrInregistrari(); k++)
-							{
-								cout << tempI[j] << " ";
-								break;
-							}
-						break;
+						pozitie2 = i;
 					}
 				}
 			}
-			
-			/*Inregistrare* tempInr = new Inregistrare[tempAtribute[pozitie].getNrInregistrari()];
-			vector <Inregistrare> tempI = tempAtribute[pozitie].getInregistrari();
-			int pozitie2 = 0;
-			for (int i = 0; i < t.getNrAtribute(); i++)
+			else if (strcmp(tipAtribut, "INTEGER") == 0)
 			{
-				if (strcmp(tempI[i].getContinutText(), numeInregistrare) == 0)
+				int integer = 0;
+				for (unsigned i = 0; i < strlen(cuvant); i++)
 				{
-					pozitie2 = i;
+					integer = integer * 10 + int(cuvant[i]) - 48;
+				}
+				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
+				{
+					if (integer == tempAtribute[pozitie].getInregistrari()[i].getContinutInteger())
+					{
+						pozitie2 = i;
+					}
 				}
 			}
-			for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
+			else if (strcmp(tipAtribut, "FLOAT") == 0)
 			{
-				cout << tempI[pozitie2]<<" ";
-			}*/
-
-			//t.setAtribute(tempAtribute, t.getNrAtribute());
-
-			//O PARTE DIN SELECT
-
-			/*for (int i = 0; i < t.getNrAtribute(); i++)
-			{
-				cout << tempAtribute[i] << " ";
+				float valFloat = 0;
+				float zecimale = 1;
+				for (unsigned i = 0; i < strlen(cuvant); i++)
+				{
+					if (cuvant[i] != '.')
+					{
+						valFloat = valFloat * 10 + int(cuvant[i]) - 48;
+					}
+					else if (cuvant[i] == '.')
+					{
+						zecimale = zecimale * 10;
+					}
+				}
+				valFloat = valFloat / zecimale;
+				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
+				{
+					if (valFloat == tempAtribute[pozitie].getInregistrari()[i].getContinutFloat())
+					{
+						pozitie2 = i;
+					}
+				}
 			}
-
-			//cout << "Inregistrarea a fost stearsa!" << endl;
-
+			for (set<char*>::iterator it = listaAtribute.begin(); it!= listaAtribute.end(); it++)
+			{
+				for (int i = 0; i < t.getNrAtribute(); i++)
+				{
+					if (strcmp(tempAtribute[i].getNumeAtribut(), *it) == 0)
+					{
+						cout << tempAtribute[i].getNumeAtribut() << " : ";
+						cout << tempAtribute[i].getInregistrari()[pozitie2] << " | ";
+					}	
+				}
+			}
 		}
 		else
 		{
 			throw exception("Nume atribut invalid!");
-		}*/
+		}
 	}
-	
-	void selectFromWhat(string comanda, Tabela& t)
-	{
 
-	}
-	//neterminat
 	void update(string comanda, Tabela& t)//update studenti set varsta = 22 where nume = bogdan
 	{
-
 		char* cuvant;
 		char* copie;
 		string aux;
@@ -1803,7 +1644,6 @@ parantezaStanga++;
 		}
 		cuvant = strtok(NULL, " "); //nume atribut de cautat
 		//verificam daca numele de atribut este valid
-
 		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
 		tempAtribute = t.getAtribute();
 		bool gasit = 0;
@@ -1837,7 +1677,6 @@ parantezaStanga++;
 			{
 				throw exception("Comanda este invalida !");
 			}
-			//
 			cuvant = strtok(NULL, " ");
 			Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
 			tempAtribute = t.getAtribute();
@@ -1870,7 +1709,6 @@ parantezaStanga++;
 				char tipAtribut[100];
 				strcpy_s(tipAtribut,strlen(tempAtribute[pozitie2].getTipAtribut())+1,tempAtribute[pozitie2].getTipAtribut());
 				//verificatm tipul atributului
-
 				if (strcmp(tipAtribut, "TEXT") == 0)
 				{
 					for (int i = 0; i < tempAtribute[pozitie2].getNrInregistrari(); i++)
@@ -1920,26 +1758,11 @@ parantezaStanga++;
 						}
 					}
 				}
-
-
-				/*for (int i = 0; i < tempAtribute[pozitie2].getNrInregistrari(); i++)
-				{
-					if (tempAtribute[pozitie2].getInregistrari()[i].getContinutInteger() == 20)
-					{
-						pozitie3 = i;
-					}
-				}*/
 				cout << pozitie1 << " " <<pozitie3<<" "<<inlocuimCu;
 				tempAtribute[pozitie1].updateAtribut(pozitie3, inlocuimCu);
-				//cout << tempAtribute[0];
-				//t.setAtribute(tempAtribute, t.getNrAtribute());
-
 			}
-			
-			//
 		}
 	}
-
 };
 
 class Input
@@ -2092,12 +1915,6 @@ public:
 					DF.deleteFrom(comanda, t);
 					//facem update la tabele
 					tabele[j] = t;
-					//cout << t;
-					/*ofstream f("tabele.txt", ios::ate);
-					for (int i = 0; i < nrTabele; i++)
-					{
-						f << tabele[i] << endl;
-					}*/
 				}
 				else
 				{
@@ -2136,12 +1953,6 @@ public:
 						SF.selectAllFrom(comanda, t);
 						//facem update la tabele
 						tabele[j] = t;
-						//cout << t;
-						/*ofstream f("tabele.txt", ios::ate);
-						for (int i = 0; i < nrTabele; i++)
-						{
-							f << tabele[i] << endl;
-						}*/
 					}
 					else
 					{
@@ -2150,11 +1961,80 @@ public:
 
 				}
 				else
+				{
 					throw exception("Comanda invalida !");
+				}
 			}
 			else //select nume, varsta from studenti where nume = bogdan
 			{
+				if (strcmp(cuvant, "FROM") == 0)
+				{
+					throw exception("Comanda invalida !");
+				}
+				//nume,
+				//stergem virgula de dupa
+				if (cuvant[strlen(cuvant) - 1] == ',')
+				{
+					char auxiliar[255] = "";
+					for (unsigned i = 0; i < strlen(cuvant) - 1; i++)
+					{
+						auxiliar[i] = cuvant[i];
+					}
+					strcpy_s(cuvant, strlen(auxiliar) + 1, auxiliar);
+				}
+				set<char*>listaAtribute;
+				//adaugam in lista
+				listaAtribute.insert(cuvant);
+				cuvant = strtok(NULL, " ");
+				while (strcmp(cuvant, "FROM") != 0)
+				{
+					//stergem virgula de dupa
+					if (cuvant[strlen(cuvant) - 1] == ',')
+					{
+						char auxiliar[255] = "";
+						for (unsigned i = 0; i < strlen(cuvant) - 1; i++)
+						{
+							auxiliar[i] = cuvant[i];
+						}
+						strcpy_s(cuvant, strlen(auxiliar) + 1, auxiliar);
+					}
+					//adaugam in lista
+					listaAtribute.insert(cuvant);
+					cuvant = strtok(NULL, " ");
+				}
+				if (strcmp(cuvant, "FROM") == 0)
+				{
+					cuvant = strtok(NULL, " ");
+					bool gasit = 0;
+					int j;
+					for (int i = 0; i < nrTabele && gasit == 0; i++)
+					{
+						if (strcmp(cuvant, tabele[i].getNumeTabela()) == 0)
+						{
+							gasit = 1;
+							j = i;
+						}
+					}
+					if (gasit)
+					{
 
+						//facem ce e de facut xD
+						Tabela t = tabele[j];
+						Comanda sW;
+						sW.selectWhat(comanda, t,listaAtribute);
+						tabele[j] = t;
+
+					}
+					else
+					{
+						throw exception("Tabela nu exista!");
+					}
+
+				}
+				else
+				{
+					throw exception("Comanda invalida !");
+				}
 			}
 		}
 		else  if (strcmp(cuvant, "UPDATE") == 0) //update studenti set varsta = 22 where nume = bogdan
@@ -2172,10 +2052,9 @@ public:
 			}
 			if (gasit)
 			{
-
 				Tabela t = tabele[j];
-				Comanda Up;
-				Up.update(comanda, t);
+				Comanda uP;
+				uP.update(comanda, t);
 				tabele[j] = t;
 			}
 			else
@@ -2189,4 +2068,3 @@ public:
 		}		
 	}
 };
-// commit text proba
