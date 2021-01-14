@@ -40,9 +40,9 @@ public:
 			delete continutText;
 		}
 	}
-	void serializare()
+	void serializare(const char* filename)
 	{
-		ofstream f("fisier_binar.bin", ios::out | ios::binary | ios::ate | ios::app);
+		ofstream f("filename", ios::out | ios::binary | ios::ate | ios::app);
 		if (continutText != nullptr)
 		{
 			int length = strlen(continutText);
@@ -292,9 +292,9 @@ public:
 		
 	}
 	
-	void serializare()
+	void serializare(const char* filename)
 	{
-		ofstream f("fisier_binar.bin", ios::out | ios::binary | ios::ate | ios::app);
+		ofstream f(filename, ios::out | ios::binary | ios::ate | ios::app);
 		int length = strlen(numeAtribut);
 		f.write((char*)&length, sizeof(length));
 		f.write(numeAtribut, length + 1);
@@ -317,7 +317,7 @@ public:
 		for (int i = 0; i < nrInregistrari; i++)
 		{
 			//f.write((char*)&inregistrari[i], sizeof(inregistrari[i]));
-			inregistrari[i].serializare();
+			inregistrari[i].serializare(filename); 
 		}
 		
 	}
@@ -813,9 +813,9 @@ public:
 			delete[] numeTabela;
 		}
 	}
-	void serializare()
+	void serializare(const char* filename)
 	{
-		ofstream f("fisier_binar.bin", ios::out | ios::binary | ios::ate | ios::app);
+		ofstream f("filename", ios::out | ios::binary | ios::ate | ios::app);
 		int length = strlen(numeTabela);
 		f.write((char*)&length, sizeof(length));
 		f.write(numeTabela, length + 1);
@@ -824,7 +824,7 @@ public:
 		for (int i = 0; i < nrAtribute; i++)
 		{
 			//f.write((char*)&atribute[i], sizeof(atribute[i]));
-			atribute[i].serializare();
+			atribute[i].serializare(filename);
 			
 		}
 		
@@ -1039,9 +1039,21 @@ public:
 		copie = new char[comanda.length() + 1];
 		strcpy(copie, comanda.c_str());
 		cuvant = strtok(copie, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			//verificare daca tabela exista deja
 			for (int i = 0; i < nrTabele; i++)
 				if (strcmp(tabele[i].getNumeTabela(), cuvant) == 0)
@@ -1075,11 +1087,19 @@ public:
 			}
 			//determinare numar de parametrii
 			cuvant = strtok(NULL, ", ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			contorCuvinte = 0;
 			while (cuvant)
 			{
 				contorCuvinte++;
 				cuvant = strtok(NULL, ", ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 			}
 			if (contorCuvinte % 4 != 0)
 			{
@@ -1094,8 +1114,20 @@ public:
 			copie = new char[comanda.length() + 1];
 			strcpy(copie, comanda.c_str());
 			cuvant = strtok(copie, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			//determinare numar atribute
 			int nrAtribute = contorCuvinte / 4;
 			Atribut* atribute = new Atribut[nrAtribute];
@@ -1104,6 +1136,10 @@ public:
 			{
 				//nume atribut
 				cuvant = strtok(NULL, ", ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				//scapam de eventualele (( sau (
 				if (cuvant[0] == '(')
 				{
@@ -1119,9 +1155,17 @@ public:
 				atribute[i].setNumeAtribut(cuvant);;
 				//tip atribut
 				cuvant = strtok(NULL, ", ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				atribute[i].setTipAtribut(cuvant);
 				//dimensiune atribut
 				cuvant = strtok(NULL, ", ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				//transformam dimensiunea din char in int
 				int dimensiune = 0;
 				for (unsigned i = 0; i < strlen(cuvant); i++)
@@ -1131,6 +1175,10 @@ public:
 				atribute[i].setDimensiuneAtribut(dimensiune);
 				//valoare implicita
 				cuvant = strtok(NULL, ", ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				//scapam de eventualele )) sau )
 				char auxiliar[255] = "";
 				if (cuvant[strlen(cuvant) - 1] == ')')
@@ -1203,7 +1251,7 @@ public:
 			if (strcmp(tabele[i].getNumeTabela(), numeTabela) == 0)
 			{
 				cout <<endl<< tabele[i]<<endl;
-				tabele[i].serializare();
+				//tabele[i].serializare();
 				gasit = 1;
 			}
 		}
@@ -1258,9 +1306,25 @@ public:
 		copie = new char[comanda.length() + 1];
 		strcpy(copie, comanda.c_str());
 		cuvant = strtok(copie, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		if (strcmp(cuvant, "VALUES") != 0)
 		{
 			cout << cuvant;
@@ -1291,11 +1355,19 @@ parantezaStanga++;
 		}
 		//determinare numar de parametrii
 		cuvant = strtok(NULL, ", ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		contorCuvinte = 0;
 		while (cuvant)
 		{
 			contorCuvinte++;
 			cuvant = strtok(NULL, ", ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 		}
 		if (contorCuvinte % t.getNrAtribute() != 0)
 		{
@@ -1311,9 +1383,25 @@ parantezaStanga++;
 		copie = new char[comanda.length() + 1];
 		strcpy(copie, comanda.c_str());
 		cuvant = strtok(copie, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		//Inregistrare tempInregistrari = new inregistrari
 		for (int i = 0; i < contorCuvinte / t.getNrAtribute(); i++)
 		{
@@ -1351,14 +1439,34 @@ parantezaStanga++;
 		copie = new char[comanda.length() + 1];
 		strcpy(copie, comanda.c_str());
 		cuvant = strtok(copie, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		if (strcmp(cuvant, "WHERE") != 0)
 		{
-			throw exception("Comanda este invalida !");
+			throw exception("Comanda invalida!");
 		}
 		cuvant = strtok(NULL, " "); //nume atribut de cautat
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		//verificam daca numele de atribut este valid	
 		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
 		tempAtribute = t.getAtribute();
@@ -1381,11 +1489,19 @@ parantezaStanga++;
 		if (gasit)
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "=") != 0)
 			{
-				throw exception("Comanda este invalida !");
+				throw exception("Comanda invalida!");
 			}
 			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			for (int i = 0; i < t.getNrAtribute(); i++)
 			{
 
@@ -1408,13 +1524,33 @@ parantezaStanga++;
 		copie = new char[comanda.length() + 1];
 		strcpy(copie, comanda.c_str());
 		cuvant = strtok(copie, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		if (strcmp(cuvant, "WHERE") != 0)
 		{
-			throw exception("Comanda este invalida !");
+			throw exception("Comanda invalida!");
 		}
 		cuvant = strtok(NULL, " "); //nume atribut de cautat
 		//verificam daca numele de atribut este valid
@@ -1441,11 +1577,19 @@ parantezaStanga++;
 		if (gasit)
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "=") != 0)
 			{
-				throw exception("Comanda este invalida !");
+				throw exception("Comanda invalida!");
 			}
 			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			int pozitie2 = 0;
 			if (strcmp(tipAtribut, "TEXT") == 0)
 			{
@@ -1518,18 +1662,42 @@ parantezaStanga++;
 		copie = new char[comanda.length() + 1];
 		strcpy(copie, comanda.c_str());
 		cuvant = strtok(copie, " ");//select
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		for (int i = 0; i < listaAtribute.size(); i++)
 		{
 			cuvant = strtok(NULL, " ");//numeAtribut de afisat
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 		}
 		cuvant = strtok(NULL, " ");//from
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");//numetabel
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");//where
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		if (strcmp(cuvant, "WHERE") != 0)
 		{
-			throw exception("Comanda este invalida !");
+			throw exception("Comanda invalida!");
 		}
 		cuvant = strtok(NULL, " "); //nume atribut de cautat
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		//verificam daca numele de atribut este valid
 		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
 		tempAtribute = t.getAtribute();
@@ -1553,9 +1721,13 @@ parantezaStanga++;
 		if (gasit)
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "=") != 0)
 			{
-				throw exception("Comanda este invalida !");
+				throw exception("Comanda invalida!");
 			}
 			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
 			int pozitie2 = 0;
@@ -1635,14 +1807,30 @@ parantezaStanga++;
 		copie = new char[comanda.length() + 1];
 		strcpy(copie, comanda.c_str());
 		cuvant = strtok(copie, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		cuvant = strtok(NULL, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		if (strcmp(cuvant, "SET") != 0)
 		{
 			cout << cuvant;
 			throw exception("Comanda invalida !");
 		}
 		cuvant = strtok(NULL, " "); //nume atribut de cautat
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		//verificam daca numele de atribut este valid
 		Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
 		tempAtribute = t.getAtribute();
@@ -1665,19 +1853,35 @@ parantezaStanga++;
 		if (gasit)
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "=") != 0)
 			{
-				throw exception("Comanda este invalida !");
+				throw exception("Comanda invalida!");
 			}
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			char inlocuimCu[255] = "";//update studenti set varsta = 22 where nume = bogdan
 			strcpy_s(inlocuimCu, strlen(cuvant) + 1, cuvant); //22
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "WHERE") != 0)
 			{
-				throw exception("Comanda este invalida !");
+				throw exception("Comanda invalida!");
 			}
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			Atribut* tempAtribute = new Atribut[t.getNrAtribute()];
 			tempAtribute = t.getAtribute();
 			bool gasit = 0;
@@ -1699,11 +1903,19 @@ parantezaStanga++;
 			if (gasit)
 			{
 				cuvant = strtok(NULL, " ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				if (strcmp(cuvant, "=") != 0)
 				{
-					throw exception("Comanda este invalida !");
+					throw exception("Comanda invalida!");
 				}
 				cuvant = strtok(NULL, " ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				//pozite 2 = pozitie nume_col2 in vector atribute
 				int pozitie3 = 99;
 				char tipAtribut[100];
@@ -1798,10 +2010,18 @@ public:
 		copie = new char[comanda.length() + 1];
 		strcpy(copie, comanda.c_str());
 		cuvant = strtok(copie, " ");
+		if (cuvant == nullptr)
+		{
+			throw exception("Comanda invalida!");
+		}
 		//CREATE TABLE
 		if (strcmp(cuvant, "CREATE") == 0)
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "TABLE") == 0)
 			{
 				Tabela t;
@@ -1817,9 +2037,17 @@ public:
 		else if (strcmp(cuvant, "DISPLAY") == 0)
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "TABLE") == 0)
 			{
 				cuvant = strtok(NULL, " ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				//cuvant=numeTabela
 				Comanda DT;
 				DT.displayTable(cuvant);
@@ -1833,6 +2061,10 @@ public:
 		else if (strcmp(cuvant, "DROP") == 0)
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "TABLE") == 0)
 			{
 				cuvant = strtok(NULL, " ");
@@ -1849,9 +2081,17 @@ public:
 		else if (strcmp(cuvant, "INSERT") == 0)
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "INTO") == 0)
 			{
 				cuvant = strtok(NULL, " ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				//cuvant=numeTabela
 				//verificam daca exista tabela
 				bool gasit = 0;
@@ -1893,9 +2133,17 @@ public:
 		else  if (strcmp(cuvant, "DELETE") == 0)
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "FROM") == 0)
 			{
 				cuvant = strtok(NULL, " ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				bool gasit = 0;
 				int j;
 				//cout << "*" << cuvant << "*";
@@ -1909,7 +2157,6 @@ public:
 				}
 				if (gasit)
 				{
-
 					Tabela t = tabele[j];
 					Comanda DF;
 					DF.deleteFrom(comanda, t);
@@ -1919,22 +2166,32 @@ public:
 				else
 				{
 					throw exception("Tabela nu exista!");
-				}
-				
+				}		
 			}
 			else
 				throw exception("Comanda invalida !");
-
 		}
 		else  if (strcmp(cuvant, "SELECT") == 0)
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			if (strcmp(cuvant, "ALL") == 0)
 			{
 				cuvant = strtok(NULL, " ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				if (strcmp(cuvant, "FROM") == 0)
 				{
 					cuvant = strtok(NULL, " ");
+					if (cuvant == nullptr)
+					{
+						throw exception("Comanda invalida!");
+					}
 					bool gasit = 0;
 					int j;
 					for (int i = 0; i < nrTabele && gasit == 0; i++)
@@ -1958,7 +2215,6 @@ public:
 					{
 						throw exception("Tabela nu exista!");
 					}
-
 				}
 				else
 				{
@@ -1986,6 +2242,10 @@ public:
 				//adaugam in lista
 				listaAtribute.insert(cuvant);
 				cuvant = strtok(NULL, " ");
+				if (cuvant == nullptr)
+				{
+					throw exception("Comanda invalida!");
+				}
 				while (strcmp(cuvant, "FROM") != 0)
 				{
 					//stergem virgula de dupa
@@ -2001,10 +2261,18 @@ public:
 					//adaugam in lista
 					listaAtribute.insert(cuvant);
 					cuvant = strtok(NULL, " ");
+					if (cuvant == nullptr)
+					{
+						throw exception("Comanda invalida!");
+					}
 				}
 				if (strcmp(cuvant, "FROM") == 0)
 				{
 					cuvant = strtok(NULL, " ");
+					if (cuvant == nullptr)
+					{
+						throw exception("Comanda invalida!");
+					}
 					bool gasit = 0;
 					int j;
 					for (int i = 0; i < nrTabele && gasit == 0; i++)
@@ -2017,7 +2285,6 @@ public:
 					}
 					if (gasit)
 					{
-
 						//facem ce e de facut xD
 						Tabela t = tabele[j];
 						Comanda sW;
@@ -2040,6 +2307,10 @@ public:
 		else  if (strcmp(cuvant, "UPDATE") == 0) //update studenti set varsta = 22 where nume = bogdan
 		{
 			cuvant = strtok(NULL, " ");
+			if (cuvant == nullptr)
+			{
+				throw exception("Comanda invalida!");
+			}
 			bool gasit = 0;
 			int j;
 			for (int i = 0; i < nrTabele && gasit == 0; i++)

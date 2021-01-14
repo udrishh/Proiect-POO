@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 			tempt.setAtribute(tempa, nrAtribute);
 			tabele.push_back(tempt);
 			nrTabele++;
-			cout << tempt << endl;
+			//cout << tempt << endl;
 		}
 	}
 	g.close();
@@ -159,5 +159,14 @@ int main(int argc, char* argv[])
 		cout << "> ";
 		getline(cin, comanda);
 	}
-	
+	//serializarea tabelelor
+	char* filename=nullptr;
+	for (int i = 0; i < nrTabele; i++)
+	{
+		filename = new char[strlen(tabele[i].getNumeTabela()) + 1];
+		strcpy_s(filename, strlen(tabele[i].getNumeTabela()) + 1, tabele[i].getNumeTabela());
+		strcat(filename,".bin");
+		tabele[i].serializare(filename);
+	}
+	cout <<endl<<endl<< "Apasa orice tasta pentru a inchide!" << endl;
 }
