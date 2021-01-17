@@ -1096,10 +1096,10 @@ public:
 			{
 				contorCuvinte++;
 				cuvant = strtok(NULL, ", ");
-				if (cuvant == nullptr)
+				/*if (cuvant == nullptr)
 				{
 					throw exception("Comanda invalida!");
-				}
+				}*/
 			}
 			if (contorCuvinte % 4 != 0)
 			{
@@ -1364,10 +1364,10 @@ parantezaStanga++;
 		{
 			contorCuvinte++;
 			cuvant = strtok(NULL, ", ");
-			if (cuvant == nullptr)
+			/*if (cuvant == nullptr)
 			{
 				throw exception("Comanda invalida!");
-			}
+			}*/
 		}
 		if (contorCuvinte % t.getNrAtribute() != 0)
 		{
