@@ -1498,16 +1498,63 @@ parantezaStanga++;
 				throw exception("Comanda invalida!");
 			}
 			cuvant = strtok(NULL, " ");//valoarea care trebuie starsa
-			if (cuvant == nullptr)
+			int pozitie2 = 0;
+
+			if (strcmp(tipAtribut, "TEXT") == 0)
 			{
-				throw exception("Comanda invalida!");
+				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
+				{
+					if (strcmp(cuvant, tempAtribute[pozitie].getInregistrari()[i].getContinutText()) == 0)
+					{
+						pozitie2 = i;
+					}
+				}
+			}
+			else if (strcmp(tipAtribut, "INTEGER") == 0)
+			{
+				int integer = 0;
+				for (unsigned i = 0; i < strlen(cuvant); i++)
+				{
+					integer = integer * 10 + int(cuvant[i]) - 48;
+				}
+				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
+				{
+					if (integer == tempAtribute[pozitie].getInregistrari()[i].getContinutInteger())
+					{
+						pozitie2 = i;
+					}
+				}
+			}
+			else if (strcmp(tipAtribut, "FLOAT") == 0)
+			{
+				float valFloat = 0;
+				float zecimale = 1;
+				for (unsigned i = 0; i < strlen(cuvant); i++)
+				{
+					if (cuvant[i] != '.')
+					{
+						valFloat = valFloat * 10 + int(cuvant[i]) - 48;
+					}
+					else if (cuvant[i] == '.')
+					{
+						zecimale = zecimale * 10;
+					}
+				}
+				valFloat = valFloat / zecimale;
+				for (int i = 0; i < tempAtribute[pozitie].getNrInregistrari(); i++)
+				{
+					if (valFloat == tempAtribute[pozitie].getInregistrari()[i].getContinutFloat())
+					{
+						pozitie2 = i;
+					}
+				}
 			}
 			for (int i = 0; i < t.getNrAtribute(); i++)
 			{
 
-				tempAtribute[i].stergeInregistrarePozitie(pozitie);
+				tempAtribute[i].stergeInregistrarePozitie(pozitie2);
 			}
-			cout <<"Inregistrarea a fost stearsa!"<< endl;	
+			cout << "Inregistrarea a fost stearsa!" << endl;
 		}
 		else
 		{
