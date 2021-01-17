@@ -9,7 +9,7 @@ using namespace std;
 //Un tabel are una sau mai multe atribute (campuri)
 //Un atribut are una sau mai multe inregistrari (valori)
 
-//INSERT INTO studenti VALUES (Bogdan, 20, 6), (Ovidiu, 21, 7.5) 
+//INSERT INTO studenti VALUES (Bogdan, 20, 6), (Ovidiu, 21, 7.5), (Delia, 22, 8.1), (Iulia, 23, 9) 
 //create table studenti ((nume, text, 255, necunoscut), (varsta, integer, 20, 18), (media, float, 10, 2.5))
 //update studenti set nume = bogdan where varsta = 21
 //select all from studenti where nume = bogdan
