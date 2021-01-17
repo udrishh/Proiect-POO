@@ -2017,7 +2017,6 @@ parantezaStanga++;
 						}
 					}
 				}
-				cout << pozitie1 << " " <<pozitie3<<" "<<inlocuimCu;
 				tempAtribute[pozitie1].updateAtribut(pozitie3, inlocuimCu);
 			}
 		}
